@@ -43,5 +43,5 @@ setup(
     packages=['lib_cast'],
     install_requires=['pytest', 'typing'],
     classifiers=CLASSIFIERS,
-    setup_requires=['pytest-runner'],
+    setup_requires=['pytest-runner', 'https://github.com/bitranox/lib_regexp/archive/master.zip'],
     tests_require=['pytest'])
