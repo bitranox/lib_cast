@@ -1,9 +1,9 @@
-lib_regexp
-==========
+lib_cast
+========
 
 .. include:: ./badges_without_jupyter.rst
 
-some convenience functions for regexp
+some convenience functions for casting
 
 supports python 3.7 and possibly other dialects.
 

@@ -1,5 +1,5 @@
-lib_regexp
-==========
+lib_cast
+========
 
 |Pypi Status| |license| |maintenance|
 
@@ -23,7 +23,7 @@ lib_regexp
    :target: https://codeclimate.com/github/bitranox/lib_cast/maintainability
    :alt: Maintainability
 
-some convenience functions for regexp
+some convenience functions for casting
 
 supports python 3.7 and possibly other dialects.
 
