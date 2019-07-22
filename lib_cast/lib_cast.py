@@ -8,7 +8,8 @@ from typing import Union
 import lib_regexp
 
 
-def cast_float_2_string(value: Union[Decimal, float], n_stellen: int = 12, n_nachkommastellen: int = 2, s_comma_seperator: str = ',') -> str:
+def cast_float_2_string(value: Union[Decimal, float], n_stellen: int = 12, n_nachkommastellen: int = 2,
+                        s_comma_seperator: str = ',') -> str:
     """
     liefere einen String aus einer Dec Zahl zurück, rechtsbündig, mit einer definierten Anzahl
     von Stellen und Nachkommastellen, sowie einem definierbarem Seperator
@@ -31,16 +32,19 @@ def cast_float_2_string(value: Union[Decimal, float], n_stellen: int = 12, n_nac
     return s_value
 
 
-def cast_float_to_human_readable_size(value: Union[Decimal, float], s_unit: str = 'Byte', n_decimals: int = 2, b_base1024: bool = False, b_short_form: bool = False, b_remove_trailing_zeros: bool = False, b_show_multiplicator=True) -> str:
+def cast_float_to_human_readable_size(value: Union[Decimal, float], s_unit: str = 'Byte', n_decimals: int = 2,
+                                      b_base1024: bool = False, b_short_form: bool = False,
+                                      b_remove_trailing_zeros: bool = False, b_show_multiplicator: bool = True) -> str:
     """
     formatiere große Zahlen in Human Readable Format, dzt nur für Bytes
 
     IEC (2^n)
-    Ki(Kibi 2^10), Mi(Mebi 2^20), Gi(Gibi 2^30) Ti(Tebi 2^40), Pi(Pebi 2^50), Ei(Exbi 2^60), Zi(Zebi 2^70), Yi(Yobi 2^80)
+    Ki(Kibi 2^10), Mi(Mebi 2^20), Gi(Gibi 2^30) Ti(Tebi 2^40),
+    Pi(Pebi 2^50), Ei(Exbi 2^60), Zi(Zebi 2^70), Yi(Yobi 2^80)
     SI (10^n)
     Y(Yotta 10^24), Z(Zetta 10^21), E(Exa 10^18), P(Peta 10^15), T(Tera 10^12),G(Giga 10^9), M(Mega 10^6), k(kilo 10^3)
 
-    :param value:                 der Wert
+    :param value:                   der Wert
     :param s_unit:                  Einheit, z.Bsp. Byte, Sekunden ...
     :param n_decimals:              Anzahl der Dezimalstellen für Retourwert
     :param b_base1024:              wenn True ist der Multiplikator 1024, wenn false dann 1000
@@ -152,18 +156,40 @@ def cast_float_to_human_readable_size(value: Union[Decimal, float], s_unit: str 
         return s_result
 
     if b_base1024:          # IEC Prefixe (2**n)
-        lst_prefix = [('', '', ''), ('Ki', 'Kibi', ' (x1024^1)'), ('Mi', 'Mebi', ' (x1024^2)'), ('Gi', 'Gibi', ' (x1024^3)'), ('Ti', 'Tebi', ' (x1024^4)'), ('Pi', 'Pebi', ' (x1024^5)'),
-                      ('Ei', 'Exbi', ' (x1024^6)'), ('Zi', 'Zebi', ' (x1024^7)'), ('Yi', 'Yobi', ' (x1024^8)')]
+        lst_prefix = [('', '', ''),
+                      ('Ki', 'Kibi', ' (x1024^1)'),
+                      ('Mi', 'Mebi', ' (x1024^2)'),
+                      ('Gi', 'Gibi', ' (x1024^3)'),
+                      ('Ti', 'Tebi', ' (x1024^4)'),
+                      ('Pi', 'Pebi', ' (x1024^5)'),
+                      ('Ei', 'Exbi', ' (x1024^6)'),
+                      ('Zi', 'Zebi', ' (x1024^7)'),
+                      ('Yi', 'Yobi', ' (x1024^8)')]
 
     else:       # ISO Prefixe (10**n)
-        lst_prefix = [('y', 'Yokto', ' (x10^-24)'), ('z', 'Zepto', ' (x10^-21)'), ('a', 'Atto', ' (x10^-18)'), ('f', 'Femto', ' (x10^-15)'), ('p', 'Piko', ' (x10^-12)'), ('n', 'Nano', ' (x10^-9)'),
-                      ('µ', 'Mikro', ' (x10^-6)'), ('m', 'Milli', ' (x10^-3)'), ('', '', ''), ('k', 'Kilo', ' (x10^3)'), ('M', 'Mega', ' (x10^6)'), ('G', 'Giga', ' (x10^9)'), ('T', 'Tera', ' (x10^12)'),
-                      ('P', 'Peta', ' (x10^15)'), ('E', 'Exa', ' (x10^18)'), ('Z', 'Zetta', ' (x10^21)'), ('Y', 'Yotta', ' (x10^24)')]
+        lst_prefix = [('y', 'Yokto', ' (x10^-24)'),
+                      ('z', 'Zepto', ' (x10^-21)'),
+                      ('a', 'Atto', ' (x10^-18)'),
+                      ('f', 'Femto', ' (x10^-15)'),
+                      ('p', 'Piko', ' (x10^-12)'),
+                      ('n', 'Nano', ' (x10^-9)'),
+                      ('µ', 'Mikro', ' (x10^-6)'),
+                      ('m', 'Milli', ' (x10^-3)'),
+                      ('', '', ''),
+                      ('k', 'Kilo', ' (x10^3)'),
+                      ('M', 'Mega', ' (x10^6)'),
+                      ('G', 'Giga', ' (x10^9)'),
+                      ('T', 'Tera', ' (x10^12)'),
+                      ('P', 'Peta', ' (x10^15)'),
+                      ('E', 'Exa', ' (x10^18)'),
+                      ('Z', 'Zetta', ' (x10^21)'),
+                      ('Y', 'Yotta', ' (x10^24)')]
 
     exponent = log(value, n_factor)
     if value < 1:
         exponent = exponent - 1
-        if int(exponent) == exponent:    # sonst bekommen wir bei value=0.001  1000 Mikro statt 1 Milli is_int funktioniert hier nicht
+        # sonst bekommen wir bei value=0.001  1000 Mikro statt 1 Milli is_int funktioniert hier nicht
+        if int(exponent) == exponent:
             exponent = exponent + 1      # da log immer float gibt - daher if int(exponent) == exponent
     exponent = int(exponent)
 
@@ -186,7 +212,7 @@ def cast_float_to_human_readable_size(value: Union[Decimal, float], s_unit: str 
     s_ret_val = s_format.format(f_ret_val)      # Zahlenwert nun als String
 
     if b_negative:
-        s_ret_val = '-'+s_ret_val
+        s_ret_val = '-' + s_ret_val
 
     if b_remove_trailing_zeros and n_decimals > 0:
         s_ret_val = s_ret_val.rstrip('0').rstrip('.')
@@ -265,7 +291,6 @@ def cast_float_2_human_readable_timediff(float_seconds: Union[Decimal, float], l
     tag_minutes = hash_tag_minutes_by_language[language_lower]
     tag_seconds = hash_tag_seconds_by_language[language_lower]
 
-
     n_days, f_remainder = divmod(float_seconds, 86400)
     n_hours, f_remainder = divmod(f_remainder, 3600)
     n_minutes, f_remainder = divmod(f_remainder, 60)
@@ -279,50 +304,59 @@ def cast_float_2_human_readable_timediff(float_seconds: Union[Decimal, float], l
     n_minutes = int(n_minutes)
 
     if n_days > 0:
-        s_timediff_de = '{:3.0f} {tag_days}, {:2.0f} {tag_hours}, {:2.0f} {tag_minutes}, {:2.0f} {tag_seconds}'.format(n_days, n_hours, n_minutes, f_seconds,
-                                                                                                                       tag_days=tag_days,
-                                                                                                                       tag_hours=tag_hours,
-                                                                                                                       tag_minutes=tag_minutes,
-                                                                                                                       tag_seconds=tag_seconds)
+        s_timediff_de = '{:3.0f} {tag_days}, {:2.0f} {tag_hours}, {:2.0f} {tag_minutes}, {:2.0f} {tag_seconds}'\
+            .format(n_days, n_hours, n_minutes, f_seconds,
+                    tag_days=tag_days, tag_hours=tag_hours, tag_minutes=tag_minutes, tag_seconds=tag_seconds)
 
     elif n_hours > 0:
-        s_timediff_de = '{:2.0f} {tag_hours}, {:2.0f} {tag_minutes}, {:2.0f} {tag_seconds}'.format(n_hours, n_minutes, f_seconds,
-                                                                                                   tag_hours=tag_hours,
-                                                                                                   tag_minutes=tag_minutes,
-                                                                                                   tag_seconds=tag_seconds)
+        s_timediff_de = '{:2.0f} {tag_hours}, {:2.0f} {tag_minutes}, {:2.0f} {tag_seconds}'\
+            .format(n_hours, n_minutes, f_seconds,
+                    tag_hours=tag_hours, tag_minutes=tag_minutes, tag_seconds=tag_seconds)
     elif n_minutes > 0:
-        s_timediff_de = '{:2.0f} {tag_minutes}, {:2.0f} {tag_seconds}'.format(n_minutes, f_seconds,
-                                                                              tag_minutes=tag_minutes,
-                                                                              tag_seconds=tag_seconds)
+        s_timediff_de = '{:2.0f} {tag_minutes}, {:2.0f} {tag_seconds}'\
+            .format(n_minutes, f_seconds, tag_minutes=tag_minutes, tag_seconds=tag_seconds)
 
-    elif f_seconds >= 10:                                                                      # grösser gleich 10 Sekunden : eine Kommastelle anzeigen , z.Bsp 12.4 Sekunden
+    # grösser gleich 10 Sekunden : eine Kommastelle anzeigen , z.Bsp 12.4 Sekunden
+    elif f_seconds >= 10:
         s_timediff_de = '{:2.1f} {tag_seconds}'.format(f_seconds, tag_seconds=tag_seconds)
-    elif f_seconds >= 1:                                                                       # grösser 1 Sekunde : zwei Kommastellen anzeigen , z.Bsp 8.43 Sekunden
+    # grösser 1 Sekunde : zwei Kommastellen anzeigen , z.Bsp 8.43 Sekunden
+    elif f_seconds >= 1:
         s_timediff_de = '{:1.2f} {tag_seconds}'.format(f_seconds, tag_seconds=tag_seconds)
-    elif f_milliseconds >= 100:                                                                # grösser gleich 100ms : keine Kommastellen anzeigen , z.Bsp 214 ms
+    # grösser gleich 100ms : keine Kommastellen anzeigen , z.Bsp 214 ms
+    elif f_milliseconds >= 100:
         s_timediff_de = '{:3.0f} ms'.format(f_milliseconds)
-    elif f_milliseconds >= 10:                                                                 # grösser gleich 10ms : eine Kommastellen anzeigen , z.Bsp 64,5 ms
+    # grösser gleich 10ms : eine Kommastellen anzeigen , z.Bsp 64,5 ms
+    elif f_milliseconds >= 10:
         s_timediff_de = '{:2.1f} ms'.format(f_milliseconds)
-    elif f_milliseconds >= 1:                                                                   # grösser gleich 1ms : zwei Kommastellen anzeigen , z.Bsp 4,53 ms
+    # grösser gleich 1ms : zwei Kommastellen anzeigen , z.Bsp 4,53 ms
+    elif f_milliseconds >= 1:
         s_timediff_de = '{:1.2f} ms'.format(f_milliseconds)
-    elif f_microseconds >= 100:                                                                 # grösser gleich 100µs : keine Kommastellen anzeigen , z.Bsp 243 µs
+    # grösser gleich 100µs : keine Kommastellen anzeigen , z.Bsp 243 µs
+    elif f_microseconds >= 100:
         s_timediff_de = '{:3.0f} µs'.format(f_microseconds)
-    elif f_microseconds >= 10:                                                                  # grösser gleich 10µs : eine Kommastellen anzeigen , z.Bsp 24.3 µs
+    # grösser gleich 10µs : eine Kommastellen anzeigen , z.Bsp 24.3 µs
+    elif f_microseconds >= 10:
         s_timediff_de = '{:2.1f} µs'.format(f_microseconds)
-    elif f_microseconds >= 1:                                                                   # grösser gleich 1µs : zwei Kommastellen anzeigen , z.Bsp 4.32 µs
+    # grösser gleich 1µs : zwei Kommastellen anzeigen , z.Bsp 4.32 µs
+    elif f_microseconds >= 1:
         s_timediff_de = '{:1.2f} µs'.format(f_microseconds)
-    elif f_nanoseconds >= 100:                                                                 # grösser gleich 100 ns keine Kommastellen angeben, z.Bsp. 243 ns
+    # grösser gleich 100 ns keine Kommastellen angeben, z.Bsp. 243 ns
+    elif f_nanoseconds >= 100:
         s_timediff_de = '{:3.0f} ns'.format(f_nanoseconds)
-    elif f_nanoseconds >= 10:                                                                  # grösser gleich 10 ns keine Kommastellen angeben, z.Bsp. 24 ns
+    # grösser gleich 10 ns keine Kommastellen angeben, z.Bsp. 24 ns
+    elif f_nanoseconds >= 10:
         s_timediff_de = '{:2.0f} ns'.format(f_nanoseconds)
-    elif f_nanoseconds >= 1:                                                                   # grösser gleich 1 ns keine Kommastellen angeben, z.Bsp. 9 ns
+    # grösser gleich 1 ns keine Kommastellen angeben, z.Bsp. 9 ns
+    elif f_nanoseconds >= 1:
         s_timediff_de = '{:1.0f} ns'.format(f_nanoseconds)
-    else:                                                                                      # kleiner 1 ns keine Kommastellen angeben, z.Bsp. 0 ns
+    # kleiner 1 ns keine Kommastellen angeben, z.Bsp. 0 ns
+    else:
         s_timediff_de = '{:1.0f} ns'.format(f_nanoseconds)
     return s_timediff_de
 
 
-def cast_float_2_human_readable_dimension(dimension_in_meters: Union[Decimal, float], language: str = 'de', unit_short: bool = True):
+def cast_float_2_human_readable_dimension(dimension_in_meters: Union[Decimal, float],
+                                          language: str = 'de', unit_short: bool = True):
     """
     >>> cast_float_2_human_readable_dimension(dimension_in_meters=Decimal('9876.987654'))
     '9.88 km'
@@ -350,7 +384,7 @@ def cast_float_2_human_readable_dimension(dimension_in_meters: Union[Decimal, fl
 
     if dimension_in_meters >= 1000:
         dict_km = {True: {'de': 'km', 'en': 'km'}, False: {'de': 'Kilometer', 'en': 'kilometer'}}
-        dimension_in_kilometers = dimension_in_meters/1000
+        dimension_in_kilometers = dimension_in_meters / 1000
         s_dimension = "{0:.2f} ".format(dimension_in_kilometers) + dict_km[unit_short][language]
         return s_dimension
     elif dimension_in_meters >= 100:
@@ -363,19 +397,19 @@ def cast_float_2_human_readable_dimension(dimension_in_meters: Union[Decimal, fl
         s_dimension = "{0:.2f} ".format(dimension_in_meters) + dict_m[unit_short][language]
         return s_dimension
     elif dimension_in_meters >= 0.010:
-        dimension_in_mm = dimension_in_meters*1000
+        dimension_in_mm = dimension_in_meters * 1000
         s_dimension = "{0:.0f} ".format(dimension_in_mm) + dict_mm[unit_short][language]
         return s_dimension
     elif dimension_in_meters >= 0.001:
-        dimension_in_mm = dimension_in_meters*1000
+        dimension_in_mm = dimension_in_meters * 1000
         s_dimension = "{0:.2f} ".format(dimension_in_mm) + dict_mm[unit_short][language]
         return s_dimension
     elif dimension_in_meters >= 0.0001:
-        dimension_in_mm = dimension_in_meters*1000
+        dimension_in_mm = dimension_in_meters * 1000
         s_dimension = "{0:.3f} ".format(dimension_in_mm) + dict_mm[unit_short][language]
         return s_dimension
     else:
-        dimension_in_um = dimension_in_meters*1000000
+        dimension_in_um = dimension_in_meters * 1000000
         s_dimension = "{0:.1f} ".format(dimension_in_um) + dict_um[unit_short][language]
         return s_dimension
 
@@ -400,15 +434,15 @@ def cast_float_2_human_readable_iterations(float_seconds: Union[Decimal, float])
     '632911 Iterationen pro Sekunde'
     """
     if float_seconds > 3600:
-        s_iterations = '{iterations:2.2f} Iterationen pro Tag'.format(iterations=86400/float_seconds)
+        s_iterations = '{iterations:2.2f} Iterationen pro Tag'.format(iterations=86400 / float_seconds)
     elif float_seconds > 60:
-        s_iterations = '{iterations:2.2f} Iterationen pro Stunde'.format(iterations=3600/float_seconds)
+        s_iterations = '{iterations:2.2f} Iterationen pro Stunde'.format(iterations=3600 / float_seconds)
     elif float_seconds > 1:
-        s_iterations = '{iterations:2.2f} Iterationen pro Minute'.format(iterations=60/float_seconds)
+        s_iterations = '{iterations:2.2f} Iterationen pro Minute'.format(iterations=60 / float_seconds)
     elif float_seconds > 0.02:
-        s_iterations = '{iterations:1.2f} Iterationen pro Sekunde'.format(iterations=1/float_seconds)
+        s_iterations = '{iterations:1.2f} Iterationen pro Sekunde'.format(iterations=1 / float_seconds)
     elif float_seconds > 0:
-        s_iterations = '{iterations:1.0f} Iterationen pro Sekunde'.format(iterations=1/float_seconds)
+        s_iterations = '{iterations:1.0f} Iterationen pro Sekunde'.format(iterations=1 / float_seconds)
     else:
         s_iterations = '∞ pro Sekunde (nicht messbar)'
     return s_iterations
@@ -463,7 +497,8 @@ def cast_float_2_human_readable_weight(weight_in_kg: Union[float, Decimal], lang
 def cast_human_readable_size_to_float(s_human_readable_size: Union[str, int, bool]) -> float:
     """
     IEC (2^n)
-    Ki(Kibi 2^10), Mi(Mebi 2^20), Gi(Gibi 2^30) Ti(Tebi 2^40), Pi(Pebi 2^50), Ei(Exbi 2^60), Zi(Zebi 2^70), Yi(Yobi 2^80)
+    Ki(Kibi 2^10), Mi(Mebi 2^20), Gi(Gibi 2^30) Ti(Tebi 2^40),
+    Pi(Pebi 2^50), Ei(Exbi 2^60), Zi(Zebi 2^70), Yi(Yobi 2^80)
 
     SI (10^n)
     Y(Yotta 10^24), Z(Zetta 10^21), E(Exa 10^18), P(Peta 10^15), T(Tera 10^12),
@@ -471,9 +506,9 @@ def cast_human_readable_size_to_float(s_human_readable_size: Union[str, int, boo
     d(Dezi 10^-1), c(Zenti 10^-2), m(Milli 10^-3), u|µ(Mikro 10^-6), n(Nano 10^-9),
     p(Piko 10^-12), f(Femto 10^-15), a(Atto 10^-18), z(Zepto 10^-21), y(Yokto 10^-24)
 
-    :param s_human_readable_size:  True: Hexadezimaler Multiplikator (1024), False : dezimaler Multiplikator (1000), default=True
+    :param s_human_readable_size:  True: Hexadezimaler Multiplikator (1024),
+                                   False : dezimaler Multiplikator (1000), default=True
     :return:                n_result, Wert als Integer oder Decimal
-
 
     >>> cast_human_readable_size_to_float('2GB')
     2000000000
@@ -512,10 +547,12 @@ def cast_human_readable_size_to_float(s_human_readable_size: Union[str, int, boo
 
     """
 
-    if not isinstance(s_human_readable_size, str):   # wenn die Größe keine Instant von String, so unverändert retour geben.
+    # wenn die Größe keine Instant von String, so unverändert retour geben.
+    if not isinstance(s_human_readable_size, str):
         return float(s_human_readable_size)
 
-    n_position, s_first_letter_found = lib_regexp.regexp_check_chars_azAZ.search(s_human_readable_size)        # suche den ersten buchstaben a-ze
+    # suche den ersten buchstaben a-ze
+    n_position, s_first_letter_found = lib_regexp.regexp_check_chars_azAZ.search(s_human_readable_size)
     try:
         result = int(s_human_readable_size[:n_position])
     except ValueError:
@@ -526,23 +563,47 @@ def cast_human_readable_size_to_float(s_human_readable_size: Union[str, int, boo
 
     s_prefix = s_human_readable_size[n_position:]
 
-    lst_prefixe = [('Ki', 'Kibi', 2**10), ('Mi', 'Mebi', 2**20), ('Gi', 'Gibi', 2**30), ('Ti', 'Tebi', 2**40), ('Pi', 'Pebi', 2**50), ('Ei', 'Exbi', 2**60), ('Zi', 'Zebi', 2**70), ('Yi', 'Yobi', 2**80),
-                   ('Y', 'Yotta', 1E24), ('Z', 'Zetta', 1E21), ('E', 'Exa', 1E18), ('P', 'Peta', 1E15), ('T', 'Tera', 1E12),
-                   ('G', 'Giga', 1E9), ('M', 'Mega', 1E6), ('k', 'kilo', 1E3), ('h', 'hekto', 1E2), ('da', 'Deka', 10),
-                   ('d', 'Dezi', 1E-1), ('c', 'Zenti', 1E-2), ('m', 'Milli', 1E-3), ('u', 'Mikro', 1E-6), ('µ', 'Mikro', 1E-6), ('n', 'Nano', 1E-9),
-                   ('p', 'Piko', 1E-12), ('f', 'Femto', 1E-15), ('a', 'Atto', 1E-18), ('z', 'Zepto', 1E-21), ('y', 'Yokto', 1E-24)
+    lst_prefixe = [('Ki', 'Kibi', 2**10),
+                   ('Mi', 'Mebi', 2**20),
+                   ('Gi', 'Gibi', 2**30),
+                   ('Ti', 'Tebi', 2**40),
+                   ('Pi', 'Pebi', 2**50),
+                   ('Ei', 'Exbi', 2**60),
+                   ('Zi', 'Zebi', 2**70),
+                   ('Yi', 'Yobi', 2**80),
+                   ('Y', 'Yotta', 1E24),
+                   ('Z', 'Zetta', 1E21),
+                   ('E', 'Exa', 1E18),
+                   ('P', 'Peta', 1E15),
+                   ('T', 'Tera', 1E12),
+                   ('G', 'Giga', 1E9),
+                   ('M', 'Mega', 1E6),
+                   ('k', 'kilo', 1E3),
+                   ('h', 'hekto', 1E2),
+                   ('da', 'Deka', 10),
+                   ('d', 'Dezi', 1E-1),
+                   ('c', 'Zenti', 1E-2),
+                   ('m', 'Milli', 1E-3),
+                   ('u', 'Mikro', 1E-6),
+                   ('µ', 'Mikro', 1E-6),
+                   ('n', 'Nano', 1E-9),
+                   ('p', 'Piko', 1E-12),
+                   ('f', 'Femto', 1E-15),
+                   ('a', 'Atto', 1E-18),
+                   ('z', 'Zepto', 1E-21),
+                   ('y', 'Yokto', 1E-24)
                    ]
 
     for (s_pref, s_pref_name, dec_faktor) in lst_prefixe:
         if s_prefix.lower().startswith(s_pref_name.lower()):        # suche nach den ganzen Einheiten lowercase
-            result = result*dec_faktor
+            result = result * dec_faktor
             if int(result) == result:    # wenn möglich in int retournieren
                 return int(result)
             else:
                 return result
 
         elif s_prefix.startswith(s_pref):                           # suche nach den Abkürzungen Case Sensitive
-            result = result*dec_faktor
+            result = result * dec_faktor
             if int(result) == result:    # wenn möglich in int retournieren
                 return int(result)
             else:
@@ -627,7 +688,8 @@ def cast_str_2_dec(s_value: str, s_comma_seperator: str = ',') -> Decimal:
     return dec_value
 
 
-def cast_str_2_list(s_input: str, keep_empty_list_items: bool = True, split_character: str = ',', strip_items: bool = True) -> [str]:
+def cast_str_2_list(s_input: str, keep_empty_list_items: bool = True, split_character: str = ',',
+                    strip_items: bool = True) -> [str]:
     """
     >>> cast_str_2_list('a')
     ['a']
