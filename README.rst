@@ -19,7 +19,7 @@ lib_regexp
    :target: https://bettercodehub.com/results/bitranox/lib_cast
 .. |snyk security| image:: https://snyk.io/test/github/bitranox/lib_cast/badge.svg
    :target: https://snyk.io/test/github/bitranox/lib_cast
-.. |code climate| image:: https://api.codeclimate.com/v1/badges/d854dda63a0f89c04032/maintainability
+.. |code climate| image:: https://api.codeclimate.com/v1/badges/7fa21a0ced3820c5faa9/maintainability
    :target: https://codeclimate.com/github/bitranox/lib_cast/maintainability
    :alt: Maintainability
 
