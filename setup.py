@@ -1,13 +1,6 @@
 """Setuptools entry point."""
 import codecs
 import os
-import sys
-import subprocess
-
-
-def pre_install(package):
-    subprocess.call([sys.executable, "-m", "pip", "install", package], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
-
 
 try:
     from setuptools import setup
@@ -37,8 +30,6 @@ if os.path.exists(readme_filename):
         long_description = readme_content
     except Exception:
         pass
-
-pre_install('git+https://github.com/bitranox/lib_regexp.git')
 
 setup(
     name='lib_cast',
