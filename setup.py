@@ -51,7 +51,7 @@ setup(
     url='https://github.com/bitranox/lib_cast',
     packages=['lib_cast'],
     install_requires=['pytest', 'typing', 'lib_regexp'],
-    dependency_links=['https://github.com/bitranox/lib_regexp/tarball/master'],
+    dependency_links=['git+https://github.com/bitranox/lib_regexp.git'],
     classifiers=CLASSIFIERS,
     setup_requires=['pytest-runner'],
     tests_require=['pytest'])
