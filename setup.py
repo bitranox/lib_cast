@@ -12,7 +12,7 @@ def pre_install(package):
 try:
     from setuptools import setup as pip_setup
 except ImportError:
-    from distutils.core import pip_setup
+    from distutils.core import setup
 
 
 CLASSIFIERS = [
@@ -38,25 +38,20 @@ if os.path.exists(readme_filename):
     except Exception:
         pass
 
+pre_install('git+https://github.com/bitranox/lib_regexp.git')
 
-def setup():
-    print('******************************')
-    pre_install('git+https://github.com/bitranox/lib_regexp.git')
-    subprocess.call([sys.executable, "-m", "pip", "install", 'git+https://github.com/bitranox/lib_regexp.git'])
-    pip_setup(
-        name='lib_cast',
-        version='0.0.1',
-        description=description,
-        long_description=long_description,
-        long_description_content_type='text/x-rst',
-        author='Robert Nowotny',
-        author_email='rnowotny1966@gmail.com',
-        url='https://github.com/bitranox/lib_cast',
-        packages=['lib_cast'],
-        install_requires=['pytest', 'typing', 'lib_regexp'],
-        classifiers=CLASSIFIERS,
-        setup_requires=['pytest-runner'],
-        tests_require=['pytest'])
-
-
-setup()
+setup(
+    name='lib_cast',
+    version='0.0.1',
+    description=description,
+    long_description=long_description,
+    long_description_content_type='text/x-rst',
+    author='Robert Nowotny',
+    author_email='rnowotny1966@gmail.com',
+    url='https://github.com/bitranox/lib_cast',
+    packages=['lib_cast'],
+    install_requires=['pytest', 'typing', 'lib_regexp'],
+    dependency_links=['https://github.com/bitranox/lib_regexp/tarball/master'],
+    classifiers=CLASSIFIERS,
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest'])
