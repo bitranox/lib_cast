@@ -50,7 +50,7 @@ setup(
     author_email='rnowotny1966@gmail.com',
     url='https://github.com/bitranox/lib_cast',
     packages=['lib_cast'],
-    install_requires=['pytest', 'typing', 'lib_regexp'],
+    install_requires=['pytest', 'typing'],
     classifiers=CLASSIFIERS,
     setup_requires=['pytest-runner'],
     tests_require=['pytest'])
