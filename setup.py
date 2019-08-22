@@ -5,8 +5,7 @@ import sys
 import subprocess
 
 
-def install(package):
-    print('Installing {package}'.format(package=package))
+def pre_install(package):
     subprocess.call([sys.executable, "-m", "pip", "install", package], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 
 
@@ -38,8 +37,8 @@ if os.path.exists(readme_filename):
         long_description = readme_content
     except Exception:
         pass
-print('HERE WE ARE !!!! ***************************')
-install('git+https://github.com/bitranox/lib_regexp.git')
+
+pre_install('git+https://github.com/bitranox/lib_regexp.git')
 
 setup(
     name='lib_cast',
