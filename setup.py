@@ -6,7 +6,10 @@ import subprocess
 
 
 def pre_install(package):
-    subprocess.call([sys.executable, "-m", "pip", "install", package], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+    try:
+        __import__(package)
+    except ImportError:
+        subprocess.call([sys.executable, "-m", "pip", "install", package], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 
 
 try:
