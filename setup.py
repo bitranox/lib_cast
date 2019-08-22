@@ -40,6 +40,7 @@ if os.path.exists(readme_filename):
 
 
 def setup():
+    print('******************************')
     pre_install('git+https://github.com/bitranox/lib_regexp.git')
     pip_setup(
         name='lib_cast',
