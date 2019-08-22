@@ -10,7 +10,7 @@ def pre_install(package):
 
 
 try:
-    from setuptools import setup as pip_setup
+    from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
