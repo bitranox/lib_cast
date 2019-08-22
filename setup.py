@@ -5,9 +5,7 @@ import sys
 import subprocess
 
 
-def pre_install_when_using_setup_py(package):
-    # subprocess.call([sys.executable, "-m", "pip", "install", package], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
-    # subprocess.call([sys.executable, "-m", "pip", "install", '-r', './requirements.txt'], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+def install_requirements_when_using_setup_py():
     subprocess.call([sys.executable, "-m", "pip", "install", '-r', './requirements.txt'])
 
 
@@ -40,7 +38,7 @@ if os.path.exists(readme_filename):
     except Exception:
         pass
 
-pre_install_when_using_setup_py('git+https://github.com/bitranox/lib_regexp.git')
+install_requirements_when_using_setup_py()
 
 setup(
     name='lib_cast',
