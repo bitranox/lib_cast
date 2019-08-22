@@ -6,7 +6,7 @@ import subprocess
 
 
 def install(package):
-    subprocess.call([sys.executable, "-m", "pip", "install", package])
+    subprocess.call([sys.executable, "-m", "pip", "install", package], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 
 
 try:
@@ -38,7 +38,7 @@ if os.path.exists(readme_filename):
     except Exception:
         pass
 
-install('https://github.com/bitranox/lib_regexp/archive/master.zip')
+install('git+https://github.com/bitranox/lib_regexp.git')
 
 setup(
     name='lib_cast',
