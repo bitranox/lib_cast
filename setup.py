@@ -6,6 +6,7 @@ import subprocess
 
 
 def install(package):
+    print('Installing {package}'.format(package=package))
     subprocess.call([sys.executable, "-m", "pip", "install", package], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 
 
