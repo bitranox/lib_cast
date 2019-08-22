@@ -38,7 +38,7 @@ if os.path.exists(readme_filename):
         long_description = readme_content
     except Exception:
         pass
-
+print('HERE WE ARE !!!! ***************************')
 install('git+https://github.com/bitranox/lib_regexp.git')
 
 setup(
