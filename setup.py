@@ -7,7 +7,8 @@ import subprocess
 
 def pre_install_when_using_setup_py(package):
     # subprocess.call([sys.executable, "-m", "pip", "install", package], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
-    subprocess.call([sys.executable, "-m", "pip", "install", '-r', './requirements.txt'], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+    # subprocess.call([sys.executable, "-m", "pip", "install", '-r', './requirements.txt'], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+    subprocess.call([sys.executable, "-m", "pip", "install", '-r', './requirements.txt'])
 
 
 try:
