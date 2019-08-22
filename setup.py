@@ -50,8 +50,7 @@ setup(
     author_email='rnowotny1966@gmail.com',
     url='https://github.com/bitranox/lib_cast',
     packages=['lib_cast'],
-    install_requires=['pytest', 'typing', 'lib_regexp'],
-    dependency_links=['git+https://github.com/bitranox/lib_regexp.git'],
+    install_requires=['pytest', 'typing', 'git+https://github.com/bitranox/lib_regexp.git'],
     classifiers=CLASSIFIERS,
     setup_requires=['pytest-runner'],
     tests_require=['pytest'])
