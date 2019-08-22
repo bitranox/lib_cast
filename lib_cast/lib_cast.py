@@ -2,7 +2,7 @@
 import datetime
 from decimal import Decimal
 from math import log
-from typing import Union
+from typing import List, SupportsFloat, SupportsInt, Union
 
 # OWN
 import lib_regexp
@@ -32,7 +32,7 @@ def cast_float_2_string(value: Union[Decimal, float], n_stellen: int = 12, n_nac
     return s_value
 
 
-def cast_float_to_human_readable_size(value: Union[Decimal, float], s_unit: str = 'Byte', n_decimals: int = 2,
+def cast_float_to_human_readable_size(value: Union[Decimal, float, int], s_unit: str = 'Byte', n_decimals: int = 2,
                                       b_base1024: bool = False, b_short_form: bool = False,
                                       b_remove_trailing_zeros: bool = False, b_show_multiplicator: bool = True) -> str:
     """
@@ -129,18 +129,19 @@ def cast_float_to_human_readable_size(value: Union[Decimal, float], s_unit: str 
 
     """
 
+    value = float(value)
     # handling für negative Zahlen - Absolutwert verwenden und in der Ausgabe '-' hinzufügen
     b_negative = False
     if value < 0:
         b_negative = True
-        value = abs(value)
+        value = value * -1
 
     n_factor = 1000         # Basis for Log
     n_list_index_add = 8      # Position der Liste für value 1...999 , also kein prefix
 
     # bei IEC Prefix, keine Kommazahlen, keine Dezimalstellen anzeichen
     if b_base1024:
-        value = round(value, 0)      # keine Kommazahlen für Base 1024
+        value = round(value, 0)           # keine Kommazahlen für Base 1024
         b_remove_trailing_zeros = True    # keine trailing Zeros
         n_decimals = 0                    # keine Nachkommastellen, Runden auf 1 Stelle
         n_factor = 1024                 # basis 1024
@@ -355,8 +356,7 @@ def cast_float_2_human_readable_timediff(float_seconds: Union[Decimal, float], l
     return s_timediff_de
 
 
-def cast_float_2_human_readable_dimension(dimension_in_meters: Union[Decimal, float],
-                                          language: str = 'de', unit_short: bool = True):
+def cast_float_2_human_readable_dimension(dimension_in_meters: Union[Decimal, float], language: str = 'de', unit_short: bool = True) -> str:
     """
     >>> cast_float_2_human_readable_dimension(dimension_in_meters=Decimal('9876.987654'))
     '9.88 km'
@@ -494,7 +494,7 @@ def cast_float_2_human_readable_weight(weight_in_kg: Union[float, Decimal], lang
         return s_weight
 
 
-def cast_human_readable_size_to_float(s_human_readable_size: Union[str, int, bool]) -> float:
+def cast_human_readable_size_to_float(s_human_readable_size: Union[str, int, bool, float]) -> float:
     """
     IEC (2^n)
     Ki(Kibi 2^10), Mi(Mebi 2^20), Gi(Gibi 2^30) Ti(Tebi 2^40),
@@ -515,9 +515,9 @@ def cast_human_readable_size_to_float(s_human_readable_size: Union[str, int, boo
     >>> cast_human_readable_size_to_float(5)
     5.0
     >>> cast_human_readable_size_to_float('-1')
-    -1
+    -1.0
     >>> cast_human_readable_size_to_float('0')
-    0
+    0.0
     >>> cast_human_readable_size_to_float('1024 Byte')      # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
     Traceback (most recent call last):
     ...
@@ -547,16 +547,14 @@ def cast_human_readable_size_to_float(s_human_readable_size: Union[str, int, boo
 
     """
 
-    # wenn die Größe keine Instant von String, so unverändert retour geben.
+    # wenn die Größe keine Instanz von String, so unverändert retour geben.
     if not isinstance(s_human_readable_size, str):
         return float(s_human_readable_size)
 
     # suche den ersten buchstaben a-ze
     n_position, s_first_letter_found = lib_regexp.regexp_check_chars_azAZ.search(s_human_readable_size)
-    try:
-        result = int(s_human_readable_size[:n_position])
-    except ValueError:
-        result = float(s_human_readable_size[:n_position])
+
+    result = float(s_human_readable_size[:n_position])
 
     if n_position is None:
         return result
@@ -688,8 +686,7 @@ def cast_str_2_dec(s_value: str, s_comma_seperator: str = ',') -> Decimal:
     return dec_value
 
 
-def cast_str_2_list(s_input: str, keep_empty_list_items: bool = True, split_character: str = ',',
-                    strip_items: bool = True) -> [str]:
+def cast_str_2_list(s_input: str, keep_empty_list_items: bool = True, split_character: str = ',', strip_items: bool = True) -> List[str]:
     """
     >>> cast_str_2_list('a')
     ['a']
@@ -715,7 +712,7 @@ def cast_str_2_list(s_input: str, keep_empty_list_items: bool = True, split_char
     return items
 
 
-def cast_list_of_strings_to_lower(list_of_strings: [str]) -> [str]:
+def cast_list_of_strings_to_lower(list_of_strings: List[str]) -> List[str]:
     """
     >>> cast_list_of_strings_to_lower(['Abra','WhaT'])
     ['abra', 'what']
@@ -727,7 +724,7 @@ def cast_list_of_strings_to_lower(list_of_strings: [str]) -> [str]:
     return items
 
 
-def get_type_as_string(instance) -> str:
+def get_type_as_string(instance: object) -> str:
     """
     >>> x='a'
     >>> get_type_as_string(x)
@@ -771,7 +768,7 @@ def is_castable_to_bool(value: Union[str, int, bool, float, None]) -> bool:
         return False
 
 
-def is_castable_to_float(value) -> bool:
+def is_castable_to_float(value: Union[SupportsFloat, str, bytes, bytearray]) -> bool:
     """
     prüft ob das objekt in float umgewandelt werden kann
 
@@ -804,7 +801,7 @@ def is_castable_to_float(value) -> bool:
         return False
 
 
-def is_castable_to_int(value) -> bool:
+def is_castable_to_int(value: Union[str, bytes, SupportsInt]) -> bool:
     """
     >>> is_castable_to_int(1)
     True
