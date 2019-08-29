@@ -11,20 +11,9 @@ import lib_regexp
 def cast_float_2_string(value: Union[Decimal, float], n_stellen: int = 12, n_nachkommastellen: int = 2,
                         s_comma_seperator: str = ',') -> str:
     """
-    liefere einen String aus einer Dec Zahl zurück, rechtsbündig, mit einer definierten Anzahl
-    von Stellen und Nachkommastellen, sowie einem definierbarem Seperator
+    decimal --> string
 
-    Dec(100000.52)  --> str('   100000,52')
-
-    Args:
-        :param value:               der Wert in Decimal
-        :param n_stellen:               Anzahl der Stellen (gesamt mit Komma und Vorzeichen)
-        :param n_nachkommastellen:      Anzahl der Nachkommastellen
-        :param s_comma_seperator:       der Komma Seperator der verwendet werden soll
-
-    Returns:
-        :return:                        s_value, den Wert als String
-        :rtype:                         str
+    >>> assert cast_float_2_string(100000.52) == '   100000,52'
 
     """
     s_value = ('{value:' + str(n_stellen) + '.' + str(n_nachkommastellen) + 'f}').format(value=value)
@@ -432,6 +421,9 @@ def cast_float_2_human_readable_iterations(float_seconds: Union[Decimal, float])
     '4318 Iterationen pro Sekunde'
     >>> cast_float_2_human_readable_iterations(0.00000158)
     '632911 Iterationen pro Sekunde'
+    >>> cast_float_2_human_readable_iterations(0)
+    '∞ pro Sekunde (nicht messbar)'
+
     """
     if float_seconds > 3600:
         s_iterations = '{iterations:2.2f} Iterationen pro Tag'.format(iterations=86400 / float_seconds)
@@ -593,14 +585,7 @@ def cast_human_readable_size_to_float(s_human_readable_size: Union[str, int, boo
                    ]
 
     for (s_pref, s_pref_name, dec_faktor) in lst_prefixe:
-        if s_prefix.lower().startswith(s_pref_name.lower()):        # suche nach den ganzen Einheiten lowercase
-            result = result * dec_faktor
-            if int(result) == result:    # wenn möglich in int retournieren
-                return int(result)
-            else:
-                return result
-
-        elif s_prefix.startswith(s_pref):                           # suche nach den Abkürzungen Case Sensitive
+        if s_prefix.startswith(s_pref) or s_prefix.lower().startswith(s_pref_name.lower()):        # suche nach den ganzen Einheiten lowercase
             result = result * dec_faktor
             if int(result) == result:    # wenn möglich in int retournieren
                 return int(result)
@@ -666,20 +651,8 @@ def cast_to_bool(value: Union[str, int, bool, float, None]) -> bool:
 
 def cast_str_2_dec(s_value: str, s_comma_seperator: str = ',') -> Decimal:
     """
-    wandle einen String in einen Dezimalwert um
-
-    '100000,52' s_comma_seperator = ','  --> Decimal(100000.52)
-
-    Args:
-        :param s_value:                 der Wert als String
-        :param s_comma_seperator:       der Komma Separator der im String verwendet wird
-
-        :type s_value:                  str
-        :type s_comma_seperator:        str
-
-    Returns:
-        :return:    dec_value,  der Decimal Wert
-        :rtype:     Decimal
+    string --> Decimal
+    >>> assert cast_str_2_dec('100000,52') == Decimal(100000.52)
     """
     s_value = s_value.replace(s_comma_seperator, '.')
     dec_value = Decimal(s_value)
