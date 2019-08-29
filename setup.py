@@ -8,8 +8,8 @@ try:
 except ImportError:
     from distutils.core import setup
 
-package_name = 'lib_regexp'
-required: List = list()
+package_name = 'lib_cast'
+required: List = ['git+https://github.com/bitranox/lib_regexp.git']
 required_for_tests: List = list()
 entry_points: Dict = dict()
 
