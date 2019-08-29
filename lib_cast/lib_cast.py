@@ -652,7 +652,7 @@ def cast_to_bool(value: Union[str, int, bool, float, None]) -> bool:
 def cast_str_2_dec(s_value: str, s_comma_seperator: str = ',') -> Decimal:
     """
     string --> Decimal
-    >>> assert cast_str_2_dec('100000,52') == Decimal(100000.52)
+    >>> assert cast_str_2_dec('100000,52') == Decimal('100000.52')
     """
     s_value = s_value.replace(s_comma_seperator, '.')
     dec_value = Decimal(s_value)
