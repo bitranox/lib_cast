@@ -10,7 +10,7 @@ except ImportError:
 
 package_name = 'lib_cast'                                                   # type: str
 # required = ['lib_regexp @ git+https://github.com/bitranox/lib_regexp.git']  # type: List
-required = ['lib_regexp @ https://github.com/bitranox/lib_regexp/archive/master.zip']  # type: List
+required = ['lib_regexp']  # type: List
 required_for_tests = list()                                                 # type: List
 entry_points = dict()                                                       # type: Dict
 
