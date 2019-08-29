@@ -9,8 +9,7 @@ except ImportError:
     from distutils.core import setup
 
 package_name = 'lib_cast'                                                   # type: str
-# required = ['lib_regexp @ git+https://github.com/bitranox/lib_regexp.git']  # type: List
-required = ['lib_regexp']  # type: List
+required = ['lib_regexp @ git+https://github.com/bitranox/lib_regexp.git']  # type: List
 required_for_tests = list()                                                 # type: List
 entry_points = dict()                                                       # type: Dict
 
@@ -68,5 +67,5 @@ setup(name=package_name,
       # minimally needs to run the setup script, dependencies needs also to put here for setup.py install test
       setup_requires=['typing',
                       'pathlib',
-                      'pytest-runner'] + required
+                      'pytest-runner']
       )
