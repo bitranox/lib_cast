@@ -124,7 +124,7 @@ following modules will be automatically installed :
     pytest-runner
 
     ## Project Requirements
-    lib_regexp
+    lib_regexp @ git+https://github.com/bitranox/lib_regexp.git
 
 Acknowledgements
 ----------------
@@ -146,6 +146,10 @@ This software is licensed under the `MIT license <http://en.wikipedia.org/wiki/M
 
 Changelog
 =========
+
+0.0.3
+-----
+ongoing development
 
 0.0.2
 -----
