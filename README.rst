@@ -149,7 +149,7 @@ Changelog
 
 0.0.3
 -----
-ongoing development
+2019-09-03: update setup.py
 
 0.0.2
 -----
