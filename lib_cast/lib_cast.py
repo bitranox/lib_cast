@@ -2,6 +2,7 @@
 import datetime
 from decimal import Decimal
 from math import log
+import time
 from typing import List, SupportsFloat, SupportsInt, Union
 
 # OWN
@@ -822,6 +823,36 @@ def cast_datetime_2_str(d_datetime: datetime.datetime, b_format_for_filename: bo
         s_datetime = s_datetime.replace(':', '-')
         s_datetime = s_datetime.replace(' ', '_')                    # 2015-06-06_17-21-02
     return s_datetime
+
+
+def cast_microtime_to_text(microtime: Union[int, float, str], timezone: str = "UTC", microtime_is_float=True, date_time_format='%Y-%m-%d %H:%M:%S'):
+    """
+    converts microtime to text date and time.
+
+    if microtime_is_float=False it takes the unix (integer) microtimestamp
+    the Timezone can be UTC otherwise it is LOCAL
+    the fractions of a second are rounded
+    >>> cast_microtime_to_text(0,"UTC")
+    '1970-01-01 00:00:00'
+    >>> cast_microtime_to_text("0","LOCAL")
+    '1970-01-01 01:00:00'
+    >>> # time_micro_time_2_text(time.time(),"UTC")
+    >>> # time_micro_time_2_text(time.time(),"LOCAL")
+
+
+    """
+    microtime = float(microtime)
+
+    if not microtime_is_float:
+        microtime = float(microtime) / 1E6
+    microtime = int(round(microtime))
+
+    if timezone == "UTC":
+        epochseconds = time.gmtime(microtime)
+    else:
+        epochseconds = time.localtime(microtime)
+
+    return time.strftime(date_time_format, epochseconds)
 
 
 def cast_str_2_datetime(s_datetime: str, b_format_for_filename: bool = False) -> datetime.datetime:
