@@ -825,7 +825,10 @@ def cast_datetime_2_str(d_datetime: datetime.datetime, b_format_for_filename: bo
     return s_datetime
 
 
-def cast_microtime_to_text(microtime: Union[int, float, str], timezone: str = "UTC", microtime_is_float=True, date_time_format='%Y-%m-%d %H:%M:%S'):
+def cast_microtime_to_text(microtime: Union[int, float, str],
+                           timezone: str = "UTC",
+                           microtime_is_float: bool = True,
+                           date_time_format: str = '%Y-%m-%d %H:%M:%S') -> str:
     """
     converts microtime to text date and time.
 
