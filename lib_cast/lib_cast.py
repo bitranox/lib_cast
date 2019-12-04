@@ -5,8 +5,9 @@ from math import log
 import time
 from typing import List, SupportsFloat, SupportsInt, Union
 
+
 # OWN
-import lib_regexp
+import lib_regexp   # type: ignore
 
 
 def cast_float_2_string(value: Union[Decimal, float], n_stellen: int = 12, n_nachkommastellen: int = 2,
