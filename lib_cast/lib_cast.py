@@ -7,6 +7,8 @@ from typing import List, SupportsFloat, SupportsInt, Union
 
 
 # OWN
+import lib_csv
+import lib_list
 import lib_regexp   # type: ignore
 
 
@@ -663,6 +665,9 @@ def cast_str_2_dec(s_value: str, s_comma_seperator: str = ',') -> Decimal:
 
 def cast_str_2_list(s_input: str, keep_empty_list_items: bool = True, split_character: str = ',', strip_items: bool = True) -> List[str]:
     """
+    >>> cast_str_2_list('a, "x, y" , b')
+
+    >>> cast_str_2_list('a, "x, y" , b')
     >>> cast_str_2_list('a')
     ['a']
     >>> cast_str_2_list('a, b')
@@ -673,17 +678,22 @@ def cast_str_2_list(s_input: str, keep_empty_list_items: bool = True, split_char
     ['a', '', 'b']
     >>> cast_str_2_list('a, , b', keep_empty_list_items=False)
     ['a', 'b']
+    >>> cast_str_2_list('"a, , b"')
+    ['a, , b']
+    >>> cast_str_2_list('a, x y , b')
+    ['a', 'x y', 'b']
+    >>> cast_str_2_list('a, "x, y" , b')
+    ['a', 'x, y', 'b']
+
+    >>> cast_str_2_list('a, "x,y" , b')
+    ['a', 'x,y', 'b']
 
     """
-    raw_items = s_input.split(split_character)
-    items = list()
-    for raw_item in raw_items:
-        if strip_items:
-            raw_item = raw_item.strip()
-        if raw_item:
-            items.append(raw_item)
-        elif keep_empty_list_items:
-            items.append('')
+    items = lib_csv.cast_csv_2_list(s_csvstr=s_input)
+    if strip_items:
+        items = lib_list.ls_strip_elements(items)
+    if not keep_empty_list_items:
+        items = lib_list.ls_del_empty_elements(items)
     return items
 
 
