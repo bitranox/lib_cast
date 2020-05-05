@@ -10,7 +10,9 @@ except ImportError:
     from distutils.core import setup
 
 package_name = 'lib_cast'                                                   # type: str
-required = ['lib_regexp @ git+https://github.com/bitranox/lib_regexp.git']  # type: List[str]
+required = ['lib_csv @ git+https://github.com/bitranox/lib_csv.git',
+            'lib_list @ git+https://github.com/bitranox/lib_list.git',
+            'lib_regexp @ git+https://github.com/bitranox/lib_regexp.git']  # type: List[str]
 required_for_tests = list()                                                 # type: List[str]
 entry_points = dict()                                                       # type: Dict[str, str]
 
