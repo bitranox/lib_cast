@@ -13,7 +13,6 @@ Options:
 
 # STDLIB
 import errno
-import logging
 import sys
 from typing import Dict
 
@@ -31,13 +30,11 @@ codeclimate_link_hash = "7fa21a0ced3820c5faa9"   # for lib_cast
 
 def project_specific(repository_slug: str, repository: str, repository_dashed: str) -> None:
     # PROJECT SPECIFIC
-    logger = logging.getLogger('project_specific')
     pass
 
 
 def main(args: Dict[str, str]) -> None:
-    logger = logging.getLogger('build_docs')
-    logger.info('create the README.rst')
+    lib_log_utils.log_info('create the README.rst')
     travis_repo_slug = args['<TRAVIS_REPO_SLUG>']
     repository = travis_repo_slug.split('/')[1]
     repository_dashed = repository.replace('_', '-')
@@ -51,11 +48,11 @@ def main(args: Dict[str, str]) -> None:
     avoid absolute paths since You never know where the program will run.
     """
 
-    logger.info('include the include blocks')
+    lib_log_utils.log_info('include the include blocks')
     rst_include.rst_inc(source='./.docs/README_template.rst',
                         target='./README.rst')
 
-    logger.info('replace repository related strings')
+    lib_log_utils.log_info('replace repository related strings')
     rst_include.rst_str_replace(source='./README.rst',
                                 target='',
                                 old='{repository_slug}',
@@ -77,7 +74,7 @@ def main(args: Dict[str, str]) -> None:
                                 new=codeclimate_link_hash,
                                 inplace=True)
 
-    logger.info('done')
+    lib_log_utils.log_info('done')
     sys.exit(0)
 
 
@@ -88,7 +85,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     lib_log_utils.add_stream_handler()
-    main_logger = logging.getLogger('main')
+
     try:
         _args = docopt(__doc__)
         main(_args)
