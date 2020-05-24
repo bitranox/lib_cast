@@ -3,11 +3,11 @@ lib_cast
 
 |Pypi Status| |license| |maintenance|
 
-|Build Status| |Codecov Status| |Better Code| |code climate| |snyk security|
+|Build Status| |Codecov Status| |Better Code| |code climate| |code climate coverage| |snyk security|
 
 .. |license| image:: https://img.shields.io/github/license/webcomics/pywine.svg
    :target: http://en.wikipedia.org/wiki/MIT_License
-.. |maintenance| image:: https://img.shields.io/maintenance/yes/{last_update_yyyy}.svg
+.. |maintenance| image:: https://img.shields.io/maintenance/yes/2021.svg
 .. |Build Status| image:: https://travis-ci.org/bitranox/lib_cast.svg?branch=master
    :target: https://travis-ci.org/bitranox/lib_cast
 .. for the pypi status link note the dashes, not the underscore !
@@ -22,17 +22,20 @@ lib_cast
 .. |code climate| image:: https://api.codeclimate.com/v1/badges/7fa21a0ced3820c5faa9/maintainability
    :target: https://codeclimate.com/github/bitranox/lib_cast/maintainability
    :alt: Maintainability
+.. |code climate coverage| image:: https://api.codeclimate.com/v1/badges/7fa21a0ced3820c5faa9/test_coverage
+   :target: https://codeclimate.com/github/bitranox/lib_cast/test_coverage
+   :alt: Code Coverage
 
-some convenience functions for casting
+Finding the name of the program from which a Python module is running can be trickier than it would seem at first
 
-supports python 3.7 and possibly other dialects.
+supports python 3.8 and possibly other dialects.
 
 `100% code coverage <https://codecov.io/gh/bitranox/lib_cast>`_, mypy static type checking, tested under `Linux, OsX, Windows and Wine <https://travis-ci.org/bitranox/lib_cast>`_, automatic daily builds  and monitoring
 
 ----
 
 - `Installation and Upgrade`_
-- `Basic Usage`_
+- `Usage`_
 - `Requirements`_
 - `Acknowledgements`_
 - `Contribute`_
@@ -52,30 +55,30 @@ From source code:
 .. code-block:: bash
 
     # normal install
-    python setup.py install
+    python3 setup.py install
     # test without installing
-    python setup.py test
+    python3 setup.py test
 
 via pip latest Release:
 
 .. code-block:: bash
 
     # latest Release from pypi
-    pip install lib_cast
+    python3 -m pip install --upgrade lib_cast
 
     # test without installing
-    pip install lib_cast --install-option test
+    python3 -m pip install lib_cast --install-option test
 
 via pip latest Development Version:
 
 .. code-block:: bash
 
     # upgrade all dependencies regardless of version number (PREFERRED)
-    pip install --upgrade git+https://github.com/bitranox/lib_cast.git --upgrade-strategy eager
+    python3 -m pip install --upgrade git+https://github.com/bitranox/lib_cast.git --upgrade-strategy eager
     # normal install
-    pip install --upgrade git+https://github.com/bitranox/lib_cast.git
+    python3 -m pip install --upgrade git+https://github.com/bitranox/lib_cast.git
     # test without installing
-    pip install git+https://github.com/bitranox/lib_cast.git --install-option test
+    python3 -m pip install git+https://github.com/bitranox/lib_cast.git --install-option test
 
 via requirements.txt:
 
@@ -85,22 +88,23 @@ via requirements.txt:
     # for the latest Release:
     lib_cast
     # for the latest Development Version :
-    git+https://github.com/bitranox/lib_cast.git
+    lib_cast @ git+https://github.com/bitranox/lib_cast.git
+
 
     # to install and upgrade all modules mentioned in requirements.txt:
-    pip install --upgrade -r /<path>/requirements.txt
+    python3 -m pip install --upgrade -r /<path>/requirements.txt
 
 via python:
 
 .. code-block:: python
 
     # for the latest Release
-    python -m pip install upgrade lib_cast
+    python3 -m pip install --upgrade lib_cast
 
     # for the latest Development Version
-    python -m pip install upgrade git+https://github.com/bitranox/lib_cast.git
+    python3 -m pip install --upgrade git+https://github.com/bitranox/lib_cast.git
 
-Basic Usage
+Usage
 -----------
 
 TBA
@@ -125,12 +129,15 @@ following modules will be automatically installed :
     pytest-runner
 
     ## Project Requirements
+    lib_csv @ git+https://github.com/bitranox/lib_csv.git
+    lib_list @ git+https://github.com/bitranox/lib_list.git
     lib_regexp @ git+https://github.com/bitranox/lib_regexp.git
 
 Acknowledgements
 ----------------
 
 - special thanks to "uncle bob" Robert C. Martin, especially for his books on "clean code" and "clean architecture"
+- more test
 
 Contribute
 ----------
@@ -147,6 +154,14 @@ This software is licensed under the `MIT license <http://en.wikipedia.org/wiki/M
 
 Changelog
 =========
+
+0.1.0
+-----
+2020-05-24:
+ - new build matrix
+ - mypy strict type testing
+ - fix title in pypi documentation
+ - drop python2.7 - python 3.4 support
 
 0.0.3
 -----

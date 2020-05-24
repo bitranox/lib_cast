@@ -1,14 +1,16 @@
+""" cast float, int, time, etc. to human readable text with SI Prefixes and more
+"""
 # STDLIB
 import datetime
 from decimal import Decimal
 from math import log
 import time
-from typing import List, SupportsFloat, SupportsInt, Union
+from typing import Any, List, SupportsFloat, SupportsInt, Union
 
 
 # OWN
-import lib_csv
-import lib_list
+import lib_csv      # type: ignore
+import lib_list     # type: ignore
 import lib_regexp   # type: ignore
 
 
@@ -663,17 +665,16 @@ def cast_str_2_dec(s_value: str, s_comma_seperator: str = ',') -> Decimal:
     return dec_value
 
 
-def cast_str_2_list(s_input: str, keep_empty_list_items: bool = True, split_character: str = ',', strip_items: bool = True) -> List[str]:
+def cast_str_2_list(s_input: str, keep_empty_list_items: bool = True) -> List[Any]:
     """
     >>> cast_str_2_list('a, "x, y" , b')
-
-    >>> cast_str_2_list('a, "x, y" , b')
+    ['a', 'x, y', 'b']
     >>> cast_str_2_list('a')
     ['a']
     >>> cast_str_2_list('a, b')
     ['a', 'b']
-    >>> cast_str_2_list('a, b',strip_items=False)
-    ['a', ' b']
+    >>> cast_str_2_list('a, b')
+    ['a', 'b']
     >>> cast_str_2_list('a, , b')
     ['a', '', 'b']
     >>> cast_str_2_list('a, , b', keep_empty_list_items=False)
@@ -684,17 +685,15 @@ def cast_str_2_list(s_input: str, keep_empty_list_items: bool = True, split_char
     ['a', 'x y', 'b']
     >>> cast_str_2_list('a, "x, y" , b')
     ['a', 'x, y', 'b']
-
     >>> cast_str_2_list('a, "x,y" , b')
     ['a', 'x,y', 'b']
 
     """
     items = lib_csv.cast_csv_2_list(s_csvstr=s_input)
-    if strip_items:
-        items = lib_list.ls_strip_elements(items)
+    items = lib_list.ls_strip_elements(items)
     if not keep_empty_list_items:
         items = lib_list.ls_del_empty_elements(items)
-    return items
+    return items  # type: ignore
 
 
 def cast_list_of_strings_to_lower(list_of_strings: List[str]) -> List[str]:

@@ -47,7 +47,7 @@ travis_repo_slug = github_account + '/' + package_name
 shell_command = package_name
 src_dir = package_name
 module_name = package_name
-init_config_title = package_name
+init_config_title = 'cast float, int, time, sizes etc. to human readable text with SI Prefixes and more'
 init_config_name = package_name
 
 # entry_points = {'console_scripts': ['{shell_command} = {src_dir}.{module_name}:main'

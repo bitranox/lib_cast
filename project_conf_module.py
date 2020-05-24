@@ -34,7 +34,7 @@ def copy_template_files(badges_with_jupiter: bool) -> None:
     copy the template files to the current project on the local development machine
     we dont overwrite some files, see code
     """
-    files_not_to_copy = ['requirements.txt', 'project_conf.py', 'usage.rst', '.travis.yml', 'README.rst']
+    files_not_to_copy = ['requirements.txt', 'project_conf.py', 'usage.rst', '.travis.yml', 'README.rst', 'CHANGES.rst']
     path_source_dir = get_path_template_dir_local()
     path_target_dir = pathlib.Path(__file__).parent.resolve()
     s_path_source_dir = str(path_source_dir)
