@@ -1,11 +1,11 @@
-lib_cast
-========
+{repository}
+{double_underline_repository}
 
-.. include:: ./badges_without_jupyter.rst
+.. include:: ./badges_project.rst
 
-some convenience functions for casting
+Finding the name of the program from which a Python module is running can be trickier than it would seem at first
 
-supports python 3.7 and possibly other dialects.
+supports python 3.8 and possibly other dialects.
 
 
 .. include:: ./tested_under.rst
@@ -13,7 +13,7 @@ supports python 3.7 and possibly other dialects.
 ----
 
 - `Installation and Upgrade`_
-- `Basic Usage`_
+- `Usage`_
 - `Requirements`_
 - `Acknowledgements`_
 - `Contribute`_
@@ -30,9 +30,9 @@ Installation and Upgrade
 .. include:: ./installation.rst
 
 
-Basic Usage
+Usage
 -----------
-.. include:: ./basic_usage.rst
+.. include:: ./usage.rst
 
 Requirements
 ------------

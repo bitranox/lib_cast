@@ -4,8 +4,9 @@ venv:
 
 # install all needed for development
 develop: venv
-	venv/bin/pip install -e . -r requirements.txt tox
+	venv/bin/python3 -m pip install -e . -r requirements_pytest.txt
+	venv/bin/python3 -m pip install -e . -r requirements.txt
 
-# clean the development envrironment
+# clean the development environment
 clean:
 	-rm -rf venv

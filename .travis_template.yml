@@ -8,14 +8,14 @@ env:
         - python_command="python"
         - pip_command="python -m pip"
         - WINEDEBUG=fixme-all       # switch off wine fix me messages
-        - CC_TEST_REPORTER_ID="0f951d4827f32d0835249263a1d4aaab93528cd3987ee0c54db11ee534dc78b1"
+        - CC_TEST_REPORTER_ID="{cc_test_reporter_id}"
         # pypi_password for lib_parameter
         # This works for sure - the Travis deploy is somehow buggy.
         # create the secret :
         # cd /<repository>
         # travis encrypt -r bitranox/lib_parameter pypi_password=*****
         # copy and paste the encrypted password in the project_conf.py
-        - secure: "D0IYa8wbsRaTA6Qu1ZK4umqXyOHhBTEW06aLp6cZhwSsWEF4issnnw+bNv3vOF3j1bAOrgNmRxzMYPeaYawUzslJDXWAYCoEE6f//uSGlU7OJbK5btxbtG03uNRhmwMH9K8h2SP0pGivwWMJpTdjHJk+rL6BSjBye9tyr77HQupBM5l6HKeK+Z/6pJl4SBLZw1PZo+x95w/2LuvJlrWFgJ8STS6MJ1PFSmCave1wEq44g87Yin1eCiyYGojxfjKB9Y2R68NY+vTqGor0ltEZ5zPJ2c2nQ2z4XrtgUjJAeh6Ud0iznTPXnnT9X4ZfKG29O/FXVu/X2pIQ6ESbYJg+9uMFxVbecUw3LKTTqOCgp7BRAadvEq8HCmzoh/pSr1z0p+cKf/cTKxmF8pE6p3/6zkSkh7wloYoPld82uIB0rKFjnL9Tprv80RYex9oak1f1cHOvMwha5fO5a7aEvQkFqaM2s/nJpwMGR/PiG1RYfK0lC5abc0FXPJg017rC3d+kbMBjXcCfU0OzJIdp0la8LVyZjKXGlYMzx4JqgiZM1z826aSOh4s3nMQZ1JVAiUUPxHelX6zJTkYCX/JNB4SWOjx+lEYc+76YT8lcu+zDT+NpJpzJjx3oDCqdnTcZukCIQc444IfCF3OI2e1JP+jm0IOqLaMYuPSgM6L+bUX+J1w="
+        {travis_pypi_secure_code}
 
 addons:
     apt:
@@ -30,64 +30,15 @@ services:   # start services
 matrix:
     include:
 
-    - os: windows
-      language: sh
-      name: "Windows Python 3.8"
+{travis_template_windows_addon}
 
-      # oddly a secure password under env: global: causes that choco fails
-      # so we need to put the option : filter_secrets: false
-      # this can be a security issue, check that You dont leak secrets here !
-      filter_secrets: false
-      before_install:
-          - git clone https://github.com/bitranox/lib_bash.git /usr/local/lib_bash
-          - chmod -R 0755 /usr/local/lib_bash
-          - chmod -R +x /usr/local/lib_bash/*.sh
-          - /usr/local/lib_bash/lib_retry.sh retry choco install python3
-          - export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
+{travis_template_linux_addon}
 
+{travis_template_pypy_addon}
 
-    - os: linux
-      language: python
-      python: '3.5'
+{travis_template_osx_addon}
 
-    - os: linux
-      language: python
-      python: '3.6'
-
-    - os: linux
-      language: python
-      python: '3.7'
-
-    - os: linux
-      language: python
-      python: '3.8'
-      before_install:
-          - export mypy_static_typecheck="True"
-          - export build_docs="True"
-          - export deploy_on_pypi="True"
-
-    - os: linux
-      language: python
-      python: '3.8-dev'
-
-
-    - os: linux
-      language: python
-      python: 'pypy3'
-
-
-    - os: osx
-      language: sh
-      name: "osX Python 3.8"
-      python: "3.8"
-      osx_image: xcode11.4
-      env:
-        # on osx pip and python points to python 2.7 - therefore we have to use pip3 and python3 here
-        - python_command="python3"
-        - pip_command="python3 -m pip"
-
-
-
+{travis_template_wine_addon}
 
 install:
     - ${pip_command} install git+https://github.com/bitranox/lib_log_utils.git;
@@ -144,12 +95,12 @@ script:
                   exit 1;
               fi
 
-          ${lib_bash_banner} "running pip install --upgrade git+https://github.com/bitranox/lib_cast.git";
-          ${CMDPREFIX} ${pip_command} install --upgrade git+https://github.com/bitranox/lib_cast.git;
+          ${lib_bash_banner} "running pip install --upgrade {github_master}";
+          ${CMDPREFIX} ${pip_command} install --upgrade {github_master};
               if [[ $? -eq 0 ]]; then
-                  ${lib_bash_banner} "pip install --upgrade git+https://github.com/bitranox/lib_cast.git - OK";
+                  ${lib_bash_banner} "pip install --upgrade {github_master} - OK";
               else
-                   ${lib_bash_banner_warning} "pip install --upgrade git+https://github.com/bitranox/lib_cast.git - FAILED";
+                   ${lib_bash_banner_warning} "pip install --upgrade {github_master} - FAILED";
                   exit 1;
               fi
 
@@ -157,7 +108,7 @@ script:
           ${CMDPREFIX} ${pip_command} install --upgrade -r ./requirements_pytest.txt;
           ${CMDPREFIX} ${pip_command} install --upgrade codecov;
           ${CMDPREFIX} ${pip_command} install --upgrade pytest-cov;
-          ${CMDPREFIX} ${python_command} -m pytest --cov=lib_cast;
+          ${CMDPREFIX} ${python_command} -m pytest --cov={package_name};
               if [[ $? -eq 0 ]]; then
                   ${lib_bash_banner} "pytest - OK";
               else
@@ -167,7 +118,7 @@ script:
 
           if [[ ${mypy_static_typecheck} == "True" ]]; then
               ${lib_bash_banner} "running mypy static typechecks --strict";
-              ${CMDPREFIX} ${python_command} -m mypy -p lib_cast --strict --no-warn-unused-ignores;
+              ${CMDPREFIX} ${python_command} -m mypy -p {package_name} --strict --no-warn-unused-ignores;
                   if [[ $? -eq 0 ]]; then
                       ${lib_bash_banner} "mypy static typechecks --strict OK";
                   else
@@ -202,7 +153,7 @@ script:
     # Bild Docs
     - if [[ -f build_docs.py ]] && [[ "${build_docs}" == "True" ]]; then
           ${lib_bash_banner} "Building Docs";
-          ${CMDPREFIX} ${python_command} build_docs.py bitranox/lib_cast;
+          ${CMDPREFIX} ${python_command} build_docs.py {travis_repo_slug};
           if [[ $? -eq 0 ]]; then
               ${lib_bash_banner} "Building Docs OK";
           else
@@ -261,4 +212,3 @@ notifications:
         - rnowotny@rotek.at
     on_success: never # default: change
     on_failure: always # default: always
-
