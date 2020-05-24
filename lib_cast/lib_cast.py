@@ -701,11 +701,7 @@ def cast_list_of_strings_to_lower(list_of_strings: List[str]) -> List[str]:
     >>> cast_list_of_strings_to_lower(['Abra','WhaT'])
     ['abra', 'what']
     """
-    items = list()
-    for string in list_of_strings:
-        string = string.lower()
-        items.append(string)
-    return items
+    return [my_string.lower() for my_string in list_of_strings]
 
 
 def get_type_as_string(instance: object) -> str:

@@ -144,12 +144,12 @@ script:
                   exit 1;
               fi
 
-          ${lib_bash_banner} "running pip install --upgrade git+https://github.com/bitranox/lib_cast.git";
-          ${CMDPREFIX} ${pip_command} install --upgrade git+https://github.com/bitranox/lib_cast.git;
+          ${lib_bash_banner} "running pip install --upgrade \"git+https://github.com/bitranox/lib_cast.git\"";
+          ${CMDPREFIX} ${pip_command} install --upgrade "git+https://github.com/bitranox/lib_cast.git";
               if [[ $? -eq 0 ]]; then
-                  ${lib_bash_banner} "pip install --upgrade git+https://github.com/bitranox/lib_cast.git - OK";
+                  ${lib_bash_banner} "pip install --upgrade \"git+https://github.com/bitranox/lib_cast.git\" - OK";
               else
-                   ${lib_bash_banner_warning} "pip install --upgrade git+https://github.com/bitranox/lib_cast.git - FAILED";
+                   ${lib_bash_banner_warning} "pip install --upgrade \"git+https://github.com/bitranox/lib_cast.git\"" - FAILED";
                   exit 1;
               fi
 
