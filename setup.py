@@ -81,8 +81,8 @@ install_requires = get_requirements_from_file('requirements.txt')
 setup_requires = list(set(tests_require + install_requires))
 
 # for deploy on pypi we must not rely on imports from github
-if is_travis_deploy() and is_tagged_commit():
-    setup_requires = strip_links_from_required(setup_requires)
+# if is_travis_deploy() and is_tagged_commit():
+#     setup_requires = strip_links_from_required(setup_requires)
 
 
 if __name__ == '__main__':
