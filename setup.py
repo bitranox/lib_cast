@@ -24,6 +24,12 @@ def is_travis_deploy() -> bool:
     return False
 
 
+def is_tagged_commit() -> bool:
+    if 'TRAVIS_TAG' in os.environ:
+        return True
+    return False
+
+
 def strip_links_from_required(l_required: List[str]) -> List[str]:
     """
     >>> required = ['lib_regexp @ git+https://github.com/bitranox/lib_regexp.git', 'test']
@@ -75,10 +81,9 @@ install_requires = get_requirements_from_file('requirements.txt')
 setup_requires = list(set(tests_require + install_requires))
 
 # for deploy on pypi we must not rely on imports from github
-if is_travis_deploy():
-    tests_require = strip_links_from_required(tests_require)
-    install_requires = strip_links_from_required(install_requires)
+if is_travis_deploy() and is_tagged_commit():
     setup_requires = strip_links_from_required(setup_requires)
+
 
 if __name__ == '__main__':
     setup(name=project_conf.package_name,
