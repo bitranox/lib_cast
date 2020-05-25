@@ -115,19 +115,6 @@ following modules will be automatically installed :
 
 .. code-block:: bash
 
-    ## Test Requirements
-    ## following Requirements will be installed temporarily for
-    ## "setup.py install test" or "pip install <package> --install-option test"
-    docopt
-    typing ; python_version < "3.5"
-    pathlib; python_version < "3.4"
-    mypy ; platform_python_implementation != "PyPy" and python_version >= "3.5"
-    pytest
-    pytest-pep8 ; python_version < "3.5"
-    pytest-pycodestyle ; python_version >= "3.5"
-    pytest-mypy ; platform_python_implementation != "PyPy" and python_version >= "3.5"
-    pytest-runner
-
     ## Project Requirements
     lib_csv @ git+https://github.com/bitranox/lib_csv.git
     lib_list @ git+https://github.com/bitranox/lib_list.git

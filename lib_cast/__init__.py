@@ -1,7 +1,10 @@
-from . import init_config
+from . import __init__conf__
 
-__title__ = init_config.title
-__version__ = init_config.version
-__name__ = init_config.name
+__title__ = __init__conf__.title
+__version__ = __init__conf__.version
+__name__ = __init__conf__.name
+__url__ = __init__conf__.url
+__author__ = __init__conf__.author
+__author_email__ = __init__conf__.author_email
 
 from .lib_cast import *
