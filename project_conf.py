@@ -56,7 +56,9 @@ entry_points = {'console_scripts': ['{shell_command} = {src_dir}.{module_name}:m
                 .format(shell_command=shell_command, src_dir=src_dir, module_name=module_name)]}  # type: Dict[str, List[str]]
 
 long_description = package_name  # will be overwritten with the content of README.rst if exists
+
 packages = [package_name]
+
 url = 'https://github.com/{github_account}/{package_name}'.format(github_account=github_account, package_name=package_name)
 github_master = 'git+https://github.com/{github_account}/{package_name}.git'.format(github_account=github_account, package_name=package_name)
 travis_repo_slug = github_account + '/' + package_name
