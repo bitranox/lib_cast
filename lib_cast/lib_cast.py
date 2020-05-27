@@ -14,7 +14,7 @@ this module exposes no other useful functions to the commandline
 # STDLIB
 import datetime
 from decimal import Decimal
-from docopt import docopt
+from docopt import docopt   # type: ignore
 from math import log
 import time
 from typing import Any, Dict, List, SupportsFloat, SupportsInt, Union
@@ -27,10 +27,10 @@ import lib_regexp   # type: ignore
 
 # PROJ
 try:
-    from .import __init__conf__                 # type: ignore   # pragma: no cover
-except (ImportError, ModuleNotFoundError):      # type: ignore   # pragma: no cover
-    # import for doctest
-    import __init__conf__                       # type: ignore   # pragma: no cover
+    from . import __init__conf__
+except ImportError:                 # pragma: no cover
+    # imports for doctest
+    import __init__conf__           # type: ignore  # pragma: no cover
 
 
 def cast_float_2_string(value: Union[Decimal, float],
@@ -938,7 +938,26 @@ def cast_str_2_datetime(s_datetime: str, b_format_for_filename: bool = False) ->
 
 
 # we might import this module and call main from another program and pass docopt args manually
-def main(docopt_args: Dict[str, str]) -> None:
+def main(docopt_args: Dict[str, Union[bool, str]]) -> None:
+    """
+    >>> docopt_args = dict()
+    >>> docopt_args['--version'] = True
+    >>> docopt_args['--info'] = False
+    >>> main(docopt_args)   # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    version: ...
+
+
+    >>> docopt_args['--version'] = False
+    >>> docopt_args['--info'] = True
+    >>> main(docopt_args)   # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    information for ...
+
+    >>> docopt_args['--version'] = False
+    >>> docopt_args['--info'] = False
+    >>> main(docopt_args)
+
+
+    """
     if docopt_args['--version']:
         __init__conf__.print_version()
     elif docopt_args['--info']:
@@ -947,8 +966,15 @@ def main(docopt_args: Dict[str, str]) -> None:
 
 # entry point via commandline
 def main_commandline() -> None:
+    """
+    >>> main_commandline()  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+        ...
+    docopt.DocoptExit: ...
+
+    """
     docopt_args = docopt(__doc__)
-    main(docopt_args)
+    main(docopt_args)       # pragma: no cover
 
 
 # entry point if main

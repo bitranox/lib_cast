@@ -71,9 +71,10 @@ it can also be used on the commandline for windows and linux bash
 
 this is for bitranox internal use, so there is no detailed documentation.
 
-supports python 3.8 and possibly other dialects.
+supports python 3.5-3.8, pypy3 and possibly other dialects.
 
-`100% code coverage <https://codecov.io/gh/bitranox/lib_cast>`_, mypy static type checking, tested under `Linux, OsX, Windows and Wine <https://travis-ci.org/bitranox/lib_cast>`_, automatic daily builds  and monitoring
+`100% code coverage <https://codecov.io/gh/bitranox/lib_cast>`_, mypy static type checking, tested under `Linux, macOS, Windows and Wine <https://travis-ci
+.org/bitranox/lib_cast>`_, automatic daily builds  and monitoring
 
 ----
 
@@ -174,7 +175,10 @@ via makefile:
 Usage
 -----------
 
-TBA
+.. code-block::
+
+    import the module and check the code - its easy and documented there, including doctest examples.
+    in case of any questions the usage section might be expanded at a later time
 
 Requirements
 ------------
@@ -183,6 +187,9 @@ following modules will be automatically installed :
 .. code-block:: bash
 
     ## Project Requirements
+    docopt
+    pathlib
+    typing
     lib_csv @ git+https://github.com/bitranox/lib_csv.git
     lib_list @ git+https://github.com/bitranox/lib_list.git
     lib_regexp @ git+https://github.com/bitranox/lib_regexp.git

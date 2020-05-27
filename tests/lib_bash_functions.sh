@@ -103,7 +103,7 @@ function pytest_codestyle_mypy() {
     my_banner_warning "pytest --pycodestyle --mypy ERROR"
     beep
     sleep "${sleeptime_on_error}"
-    exit 1
+    return 1
   fi
 }
 
@@ -113,7 +113,7 @@ function mypy_strict() {
     my_banner_warning "mypy strict ERROR"
     beep
     sleep "${sleeptime_on_error}"
-    exit 1
+    return 1
   fi
 }
 
@@ -123,7 +123,7 @@ function mypy_strict_with_imports() {
     my_banner_warning "mypy strict including imports ERROR"
     beep
     sleep "${sleeptime_on_error}"
-    exit 1
+    return 1
   fi
 }
 
@@ -135,7 +135,7 @@ function install_pip_requirements_venv() {
       my_banner_warning "pip install -r requirements.txt ERROR"
       beep
       sleep "${sleeptime_on_error}"
-      exit 1
+      return 1
     fi
   fi
 }
@@ -149,7 +149,7 @@ function setup_install_venv() {
       my_banner_warning "setup.py install ERROR"
       beep
       sleep "${sleeptime_on_error}"
-      exit 1
+      return 1
     fi
   fi
 }
@@ -165,7 +165,7 @@ function test_commandline_interface_venv() {
     my_banner_warning "pytest commandline interface ERROR"
     beep
     sleep "${sleeptime_on_error}"
-    exit1
+    return 1
   fi
 }
 
@@ -178,7 +178,7 @@ function test_setup_test_venv() {
       my_banner_warning "setup.py test ERROR"
       beep
       sleep "${sleeptime_on_error}"
-      exit 1
+      return 1
     fi
   fi
 }

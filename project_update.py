@@ -4,7 +4,7 @@ import shutil
 from typing import List
 
 # OWN
-import project_conf         # type: ignore
+import project_conf
 
 
 def create_init_config_file() -> None:
@@ -81,7 +81,7 @@ def get_paths_to_copy(path_source_dir: pathlib.Path) -> List[pathlib.Path]:
     return paths_source
 
 
-def copy_template_files(badges_with_jupiter: bool) -> None:
+def copy_project_files() -> None:
     """
     copy the template files to the current project on the local development machine
     we dont overwrite some files, see code
@@ -104,19 +104,24 @@ def copy_template_files(badges_with_jupiter: bool) -> None:
 
             shutil.copy(s_path_sourcefile, s_path_targetfile)
 
-    # copy badges template
-    if badges_with_jupiter:
-        path_sourcefile = path_source_dir / '.docs/badges_with_jupyter.rst'
-    else:
-        path_sourcefile = path_source_dir / '.docs/badges_without_jupyter.rst'
-    path_targetfile = path_target_dir / '.docs/badges_project.rst'
-    shutil.copy(str(path_sourcefile), str(path_targetfile))
+
+def copy_template_files() -> None:
+    path_source_dir = get_path_template_dir_local()
+    path_target_dir = pathlib.Path(__file__).parent.resolve()
 
     # copy CHANGES.rst template if not there
     path_targetfile = path_target_dir / 'CHANGES.rst'
     if not path_targetfile.is_file():
         path_sourcefile = path_source_dir / 'templates/CHANGES.rst'
         shutil.copy(str(path_sourcefile), str(path_targetfile))
+
+    # copy badges template
+    if project_conf.badges_with_jupiter:
+        path_sourcefile = path_source_dir / '.docs/badges_with_jupyter.rst'
+    else:
+        path_sourcefile = path_source_dir / '.docs/badges_without_jupyter.rst'
+    path_targetfile = path_target_dir / '.docs/badges_project.rst'
+    shutil.copy(str(path_sourcefile), str(path_targetfile))
     # copy usage.rst template if not there
     path_targetfile = path_target_dir / '.docs/usage.rst'
     if not path_targetfile.is_file():
@@ -146,32 +151,31 @@ def replace_marker(text: str, marker: str, src_filename: str, replace_marker_wit
     return text
 
 
-def create_travis_file(linux_tests: bool, osx_tests: bool, pypy_tests: bool, windows_tests: bool, wine_tests: bool,
-                       package_name: str, cc_test_reporter_id: str, travis_pypi_secure_code: str, travis_repo_slug: str, github_master: str) -> None:
+def create_travis_file() -> None:
 
-    if not travis_pypi_secure_code:
+    if not project_conf.travis_pypi_secure_code:
         travis_pypi_secure_code = '# - secure: "none"'
     else:
-        travis_pypi_secure_code = '- secure: "{code}"'.format(code=travis_pypi_secure_code)
+        travis_pypi_secure_code = '- secure: "{code}"'.format(code=project_conf.travis_pypi_secure_code)
 
     path_base_dir = pathlib.Path(__file__).parent
     text = '{travis_template}\n'
     text = replace_marker(text=text, marker='{travis_template}', src_filename='.travis_template.yml')
     text = replace_marker(text=text, marker='{travis_template_linux_addon}',
-                          src_filename='.travis_template_linux_addon.yml', replace_marker_with_src_file=linux_tests)
+                          src_filename='.travis_template_linux_addon.yml', replace_marker_with_src_file=project_conf.linux_tests)
     text = replace_marker(text=text, marker='{travis_template_osx_addon}',
-                          src_filename='.travis_template_osx_addon.yml', replace_marker_with_src_file=osx_tests)
+                          src_filename='.travis_template_osx_addon.yml', replace_marker_with_src_file=project_conf.osx_tests)
     text = replace_marker(text=text, marker='{travis_template_pypy_addon}',
-                          src_filename='.travis_template_pypy_addon.yml', replace_marker_with_src_file=pypy_tests)
+                          src_filename='.travis_template_pypy_addon.yml', replace_marker_with_src_file=project_conf.pypy_tests)
     text = replace_marker(text=text, marker='{travis_template_windows_addon}',
-                          src_filename='.travis_template_windows_addon.yml', replace_marker_with_src_file=windows_tests)
+                          src_filename='.travis_template_windows_addon.yml', replace_marker_with_src_file=project_conf.windows_tests)
     text = replace_marker(text=text, marker='{travis_template_wine_addon}',
-                          src_filename='.travis_template_wine_addon.yml', replace_marker_with_src_file=wine_tests)
-    text = text.replace('{package_name}', package_name)
-    text = text.replace('{cc_test_reporter_id}', cc_test_reporter_id)
+                          src_filename='.travis_template_wine_addon.yml', replace_marker_with_src_file=project_conf.wine_tests)
+    text = text.replace('{package_name}', project_conf.package_name)
+    text = text.replace('{cc_test_reporter_id}', project_conf.cc_test_reporter_id)
     text = text.replace('{travis_pypi_secure_code}', travis_pypi_secure_code)
-    text = text.replace('{travis_repo_slug}', travis_repo_slug)
-    text = text.replace('{github_master}', github_master)
+    text = text.replace('{travis_repo_slug}', project_conf.travis_repo_slug)
+    text = text.replace('{github_master}', project_conf.github_master)
     target_file = path_base_dir / '.travis.yml'
     with open(str(target_file), 'w') as f_target_file:
         f_target_file.write(text)
@@ -183,7 +187,6 @@ def create_travis_file(linux_tests: bool, osx_tests: bool, pypy_tests: bool, win
         (path_base_dir / '.travis_template_pypy_addon.yml').unlink()
         (path_base_dir / '.travis_template_windows_addon.yml').unlink()
         (path_base_dir / '.travis_template_wine_addon.yml').unlink()
-        (path_base_dir / '.travis_template.yml').unlink()
 
 
 if __name__ == '__main__':
@@ -192,15 +195,11 @@ if __name__ == '__main__':
 
     # copy files from template folder to current project
     if not is_in_own_project_folder():  # we dont want to copy if we run this in the template project itself
-        copy_template_files(badges_with_jupiter=project_conf.badges_with_jupiter)
+        copy_project_files()
+        copy_template_files()
 
     # create travis file
-    create_travis_file(linux_tests=project_conf.linux_tests, osx_tests=project_conf.osx_tests,
-                       pypy_tests=project_conf.pypy_tests, windows_tests=project_conf.windows_tests,
-                       wine_tests=project_conf.wine_tests, package_name=project_conf.package_name,
-                       cc_test_reporter_id=project_conf.cc_test_reporter_id,
-                       travis_pypi_secure_code=project_conf.travis_pypi_secure_code,
-                       travis_repo_slug=project_conf.travis_repo_slug, github_master=project_conf.github_master)
+    create_travis_file()
 
     # create readme.rst
     import build_docs
