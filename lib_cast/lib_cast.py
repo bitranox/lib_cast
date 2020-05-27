@@ -1,11 +1,23 @@
-""" cast float, int, time, etc. to human readable text with SI Prefixes and more
 """
+Usage:  lib_cast (-h | -v | -i)
+
+    -h, --help          show help
+    -v, --version       show version
+    -i, --info          show Info
+
+cast float, int, time, etc. to human readable text with SI Prefixes and more
+this module exposes no other useful functions to the commandline
+"""
+# docopt syntax see : http://docopt.org/
+
+
 # STDLIB
 import datetime
 from decimal import Decimal
+from docopt import docopt
 from math import log
 import time
-from typing import Any, List, SupportsFloat, SupportsInt, Union
+from typing import Any, Dict, List, SupportsFloat, SupportsInt, Union
 
 
 # OWN
@@ -13,40 +25,71 @@ import lib_csv      # type: ignore
 import lib_list     # type: ignore
 import lib_regexp   # type: ignore
 
+# PROJ
+try:
+    from .import __init__conf__                 # type: ignore   # pragma: no cover
+except (ImportError, ModuleNotFoundError):      # type: ignore   # pragma: no cover
+    # import for doctest
+    import __init__conf__                       # type: ignore   # pragma: no cover
 
-def cast_float_2_string(value: Union[Decimal, float], n_stellen: int = 12, n_nachkommastellen: int = 2,
-                        s_comma_seperator: str = ',') -> str:
+
+def cast_float_2_string(value: Union[Decimal, float],
+                        digits: int = 12,
+                        decimals: int = 2,
+                        comma_seperator: str = ',',
+                        remove_trailing_zeros: bool = False,
+                        strip: bool = False) -> str:
     """
     decimal --> string
 
-    >>> assert cast_float_2_string(100000.52) == '   100000,52'
+    >>> assert cast_float_2_string(100000.52)                                               == '   100000,52'
+    >>> assert cast_float_2_string(-100000.52)                                              == '  -100000,52'
+    >>> assert cast_float_2_string(-100000.52, strip=True)                                  == '-100000,52'
+    >>> assert cast_float_2_string(-100000.52, comma_seperator='.', strip=True)             == '-100000.52'
+    >>> # test remove trailing zeros, but keep position for tables
+    >>> assert cast_float_2_string(-100000.00)                                              == '  -100000,00'
+    >>> assert cast_float_2_string(-100000.00, remove_trailing_zeros=True)                  == '  -100000   '
+    >>> assert cast_float_2_string(-100000.00, remove_trailing_zeros=True, strip = True)    == '-100000'
 
     """
-    s_value = ('{value:' + str(n_stellen) + '.' + str(n_nachkommastellen) + 'f}').format(value=value)
-    s_value = s_value.replace('.', s_comma_seperator)
+    s_value = ('{value:' + str(digits) + '.' + str(decimals) + 'f}').format(value=value)
+    s_value = s_value.replace('.', comma_seperator)
+
+    if remove_trailing_zeros and decimals > 0:
+        parts = s_value.rsplit(comma_seperator, 1)
+        s_value = parts[0] + ' ' * (len(parts[1]) + 1)
+
+    if strip:
+        s_value = s_value.strip()
+
     return s_value
 
 
-def cast_float_to_human_readable_size(value: Union[Decimal, float, int], s_unit: str = 'Byte', n_decimals: int = 2,
-                                      b_base1024: bool = False, b_short_form: bool = False,
-                                      b_remove_trailing_zeros: bool = False, b_show_multiplicator: bool = True) -> str:
+def cast_float_to_human_readable_size(value: Union[Decimal, float, int], unit: str = 'Byte', decimals: int = 2,
+                                      base1024: bool = False, short_form: bool = False,
+                                      remove_trailing_zeros: bool = False, show_exponent: bool = True) -> str:
     """
-    formatiere große Zahlen in Human Readable Format, dzt nur für Bytes
+    format numbers into human readable format
 
-    IEC (2^n)
-    Ki(Kibi 2^10), Mi(Mebi 2^20), Gi(Gibi 2^30) Ti(Tebi 2^40),
-    Pi(Pebi 2^50), Ei(Exbi 2^60), Zi(Zebi 2^70), Yi(Yobi 2^80)
-    SI (10^n)
-    Y(Yotta 10^24), Z(Zetta 10^21), E(Exa 10^18), P(Peta 10^15), T(Tera 10^12),G(Giga 10^9), M(Mega 10^6), k(kilo 10^3)
-
-    :param value:                   der Wert
-    :param s_unit:                  Einheit, z.Bsp. Byte, Sekunden ...
-    :param n_decimals:              Anzahl der Dezimalstellen für Retourwert
-    :param b_base1024:              wenn True ist der Multiplikator 1024, wenn false dann 1000
-    :param b_short_form:            Kurzform : kByte statt KiloByte
-    :param b_remove_trailing_zeros: Kommazahlen unterdrücken wenn Null : 1024 kByte statt 1024.00 kByte
-    :param b_show_multiplicator:    Multiplikator anzeigen : '10.00 MilliVolt (x10^-3)'
+    :param value:                 the value in float or int
+    :param unit:                  the unit, like Byte, seconds, Volts
+    :param decimals:              number of dezimals
+    :param base1024:              True or False for base1024 or base10
+    :param short_form:            True : short Prefix like "k", False : long Prefix like "Kilo"
+    :param remove_trailing_zeros: dont show the decimals when they are zero : 1024 kByte instead 1024.00 kByte
+    :param show_exponent:         '10.00 MilliVolt (x10^-3)'
     :return:  String
+
+    IEC Prefixe (2**n)                  ISO Prefixe (10**-n)                ISO Prefixe (10**n)
+    =======================             =======================             =======================
+    'Ki', 'Kibi', (x1024^1)             'm', 'Milli', (x10^-3)              'k', 'Kilo' , (x10^3)
+    'Mi', 'Mebi', (x1024^2)             'µ', 'Mikro', (x10^-6)              'M', 'Mega' , (x10^6)
+    'Gi', 'Gibi', (x1024^3)             'n', 'Nano' , (x10^-9)              'G', 'Giga' , (x10^9)
+    'Ti', 'Tebi', (x1024^4)             'p', 'Piko' , (x10^-12)             'T', 'Tera' , (x10^12)
+    'Pi', 'Pebi', (x1024^5)             'f', 'Femto', (x10^-15)             'P', 'Peta' , (x10^15)
+    'Ei', 'Exbi', (x1024^6)             'a', 'Atto' , (x10^-18)             'E', 'Exa'  , (x10^18)
+    'Zi', 'Zebi', (x1024^7)             'z', 'Zepto', (x10^-21)             'Z', 'Zetta', (x10^21)
+    'Yi', 'Yobi', (x1024^8)             'y', 'Yokto', (x10^-24)             'Y', 'Yotta', (x10^24)
 
 
     >>> cast_float_to_human_readable_size(0.1,'Volt')
@@ -73,7 +116,7 @@ def cast_float_to_human_readable_size(value: Union[Decimal, float, int], s_unit:
     '0.10 YoktoVolt (x10^-24)'
     >>> cast_float_to_human_readable_size(0,'Volt')
     '0.00 Volt'
-    >>> cast_float_to_human_readable_size(0,'Volt',b_remove_trailing_zeros=True)
+    >>> cast_float_to_human_readable_size(0,'Volt',remove_trailing_zeros=True)
     '0 Volt'
     >>> cast_float_to_human_readable_size(1,'Volt')
     '1.00 Volt'
@@ -103,23 +146,23 @@ def cast_float_to_human_readable_size(value: Union[Decimal, float, int], s_unit:
     '1000.00 YottaVolt (x10^24)'
 
 
-    >>> cast_float_to_human_readable_size(1.00,'Volt',b_remove_trailing_zeros=True)
+    >>> cast_float_to_human_readable_size(1.00,'Volt',remove_trailing_zeros=True)
     '1 Volt'
     >>> cast_float_to_human_readable_size(1.5)
     '1.50 Byte'
-    >>> cast_float_to_human_readable_size(12.3789,n_decimals=0)
+    >>> cast_float_to_human_readable_size(12.3789,decimals=0)
     '12 Byte'
     >>> cast_float_to_human_readable_size(12.3789)
     '12.38 Byte'
-    >>> cast_float_to_human_readable_size(1024,b_base1024=True)
+    >>> cast_float_to_human_readable_size(1024,base1024=True)
     '1 KibiByte (x1024^1)'
-    >>> cast_float_to_human_readable_size(65535,b_base1024=True)
+    >>> cast_float_to_human_readable_size(65535,base1024=True)
     '64 KibiByte (x1024^1)'
-    >>> cast_float_to_human_readable_size(-3456,b_base1024=True)
+    >>> cast_float_to_human_readable_size(-3456,base1024=True)
     '-3 KibiByte (x1024^1)'
-    >>> cast_float_to_human_readable_size(0.1,b_base1024=True)
+    >>> cast_float_to_human_readable_size(0.1,base1024=True)
     '0 Byte'
-    >>> cast_float_to_human_readable_size(-0.1,b_base1024=True)
+    >>> cast_float_to_human_readable_size(-0.1,base1024=True)
     '0 Byte'
 
     """
@@ -135,23 +178,23 @@ def cast_float_to_human_readable_size(value: Union[Decimal, float, int], s_unit:
     n_list_index_add = 8      # Position der Liste für value 1...999 , also kein prefix
 
     # bei IEC Prefix, keine Kommazahlen, keine Dezimalstellen anzeichen
-    if b_base1024:
+    if base1024:
         value = round(value, 0)           # keine Kommazahlen für Base 1024
-        b_remove_trailing_zeros = True    # keine trailing Zeros
-        n_decimals = 0                    # keine Nachkommastellen, Runden auf 1 Stelle
+        remove_trailing_zeros = True    # keine trailing Zeros
+        decimals = 0                    # keine Nachkommastellen, Runden auf 1 Stelle
         n_factor = 1024                 # basis 1024
         n_list_index_add = 0            # Die Liste für Basis 1024 startet mit 0
 
     # handling für Null, denn log von 0 geht nicht
     if value == 0:
-        if b_remove_trailing_zeros:
-            s_result = '0 ' + s_unit
+        if remove_trailing_zeros:
+            s_result = '0 ' + unit
         else:
-            s_format = '{:.%sf} ' % n_decimals  # format String
-            s_result = s_format.format(0) + s_unit
+            s_format = '{:.%sf} ' % decimals  # format String
+            s_result = s_format.format(0) + unit
         return s_result
 
-    if b_base1024:          # IEC Prefixe (2**n)
+    if base1024:          # IEC Prefixe (2**n)
         lst_prefix = [('', '', ''),
                       ('Ki', 'Kibi', ' (x1024^1)'),
                       ('Mi', 'Mebi', ' (x1024^2)'),
@@ -200,21 +243,21 @@ def cast_float_to_human_readable_size(value: Union[Decimal, float, int], s_unit:
     n_index = exponent + n_list_index_add
 
     s_short_prefix, s_prefix, s_mul = lst_prefix[n_index]
-    if b_short_form:
+    if short_form:
         s_prefix = s_short_prefix
 
-    f_ret_val = round(quotient, n_decimals)     # auf gewünschte Stellen runden
-    s_format = '{:.%sf}' % n_decimals           # format String
-    s_ret_val = s_format.format(f_ret_val)      # Zahlenwert nun als String
+    f_ret_val = round(quotient, decimals)     # auf gewünschte Stellen runden
+    s_format = '{:.%sf}' % decimals           # format String
+    s_ret_val = s_format.format(f_ret_val)    # Zahlenwert nun als String
 
     if b_negative:
         s_ret_val = '-' + s_ret_val
 
-    if b_remove_trailing_zeros and n_decimals > 0:
+    if remove_trailing_zeros and decimals > 0:
         s_ret_val = s_ret_val.rstrip('0').rstrip('.')
 
-    s_ret_val = s_ret_val + ' ' + s_prefix + s_unit
-    if b_show_multiplicator:
+    s_ret_val = s_ret_val + ' ' + s_prefix + unit
+    if show_exponent:
         s_ret_val = s_ret_val + s_mul
 
     return s_ret_val
@@ -892,3 +935,22 @@ def cast_str_2_datetime(s_datetime: str, b_format_for_filename: bool = False) ->
     n_second = int(s_second)
     d_datetime = datetime.datetime(n_year, n_month, n_day, n_hour, n_minute, n_second)
     return d_datetime
+
+
+# we might import this module and call main from another program and pass docopt args manually
+def main(docopt_args: Dict[str, str]) -> None:
+    if docopt_args['--version']:
+        __init__conf__.print_version()
+    elif docopt_args['--info']:
+        __init__conf__.print_info()
+
+
+# entry point via commandline
+def main_commandline() -> None:
+    docopt_args = docopt(__doc__)
+    main(docopt_args)
+
+
+# entry point if main
+if __name__ == '__main__':
+    main_commandline()

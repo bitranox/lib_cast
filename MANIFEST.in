@@ -2,3 +2,7 @@
 
 # include rst files, like changes.rst
 include *.rst
+
+# exclude files only needed for local development
+prune build_docs.py
+prune project_update.py

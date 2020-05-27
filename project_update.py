@@ -128,7 +128,7 @@ def copy_template_files(badges_with_jupiter: bool) -> None:
         path_sourcefile = path_source_dir / 'templates/description.rst'
         shutil.copy(str(path_sourcefile), str(path_targetfile))
     # overwrite installation.rst template
-    path_targetfile = path_target_dir / 'installation.rst'
+    path_targetfile = path_target_dir / '.docs/installation.rst'
     path_sourcefile = path_source_dir / 'templates/installation.rst'
     shutil.copy(str(path_sourcefile), str(path_targetfile))
 
@@ -177,12 +177,13 @@ def create_travis_file(linux_tests: bool, osx_tests: bool, pypy_tests: bool, win
         f_target_file.write(text)
 
     if not is_in_own_project_folder():
-        (path_base_dir / '.travis_template.yml').unlink(missing_ok=True)
-        (path_base_dir / '.travis_template_linux_addon.yml').unlink(missing_ok=True)
-        (path_base_dir / '.travis_template_osx_addon.yml').unlink(missing_ok=True)
-        (path_base_dir / '.travis_template_pypy_addon.yml').unlink(missing_ok=True)
-        (path_base_dir / '.travis_template_windows_addon.yml').unlink(missing_ok=True)
-        (path_base_dir / '.travis_template.yml').unlink(missing_ok=True)
+        (path_base_dir / '.travis_template.yml').unlink()
+        (path_base_dir / '.travis_template_linux_addon.yml').unlink()
+        (path_base_dir / '.travis_template_osx_addon.yml').unlink()
+        (path_base_dir / '.travis_template_pypy_addon.yml').unlink()
+        (path_base_dir / '.travis_template_windows_addon.yml').unlink()
+        (path_base_dir / '.travis_template_wine_addon.yml').unlink()
+        (path_base_dir / '.travis_template.yml').unlink()
 
 
 if __name__ == '__main__':

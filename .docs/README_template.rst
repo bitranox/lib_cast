@@ -3,9 +3,12 @@
 
 .. include:: ./badges_project.rst
 
-Finding the name of the program from which a Python module is running can be trickier than it would seem at first
+.. include:: ./description.rst
 
-supports python 3.8 and possibly other dialects.
+
+
+
+this is for bitranox internal use, so there is no detailed documentation.
 
 
 .. include:: ./tested_under.rst
