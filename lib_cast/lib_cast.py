@@ -886,11 +886,7 @@ def cast_microtime_to_text(microtime: Union[int, float, str],
     the fractions of a second are rounded
     >>> cast_microtime_to_text(0,"UTC")
     '1970-01-01 00:00:00'
-    >>> cast_microtime_to_text("0","LOCAL")
-    '1970-01-01 01:00:00'
-    >>> # time_micro_time_2_text(time.time(),"UTC")
-    >>> # time_micro_time_2_text(time.time(),"LOCAL")
-
+    >>> assert cast_microtime_to_text("0","LOCAL")
 
     """
     microtime = float(microtime)
