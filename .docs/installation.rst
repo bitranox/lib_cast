@@ -33,7 +33,7 @@ via requirements.txt:
 .. code-block:: bash
 
     # Insert following line in Your requirements.txt:
-    # for the latest Release:
+    # for the latest Release on pypi (if any):
     {repository}
     # for the latest Development Version :
     {repository} @ git+https://github.com/{repository_slug}.git
@@ -51,3 +51,27 @@ via python:
 
     # for the latest Development Version
     python3 -m pip install --upgrade git+https://github.com/{repository_slug}.git
+
+
+via makefile:
+
+.. code-block:: shell
+
+    # from Your shell's homedirectory:
+    $ git clone https://github.com/{repository_slug}.git
+    $ cd {repository}
+
+    # to run the tests:
+    $ make test
+
+    # to install the package
+    $ make install
+
+    # to clean the package
+    $ make clean
+
+    # uninstall the package
+    $ make uninstall
+
+    # ti install development environment
+    $ make develop
