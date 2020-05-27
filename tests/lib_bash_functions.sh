@@ -13,9 +13,11 @@ project_root_dir="$(dirname "${tests_dir}")"              # one level up
 # if we have other Projects stored in that directory, we can import them without installing, otherwise not harmful
 above_project_root_dir="$(dirname "${project_root_dir}")" # one level up
 export PYTHONPATH="${above_project_root_dir}":"${PYTHONPATH}"
+
 # if we have other Projects stored in that directory, we can import them without installing, otherwise not harmful
-two_above_project_root_dir="$(dirname "${above_project_root_dir}")" # one level up
-export PYTHONPATH="${two_above_project_root_dir}":"${PYTHONPATH}"
+# this we might need for rotek intern development - but then commandline registration will fail - keep this as a reminder :
+# two_above_project_root_dir="$(dirname "${above_project_root_dir}")" # one level up
+# export PYTHONPATH="${two_above_project_root_dir}":"${PYTHONPATH}"
 
 function install_or_update_lib_bash() {
   if [[ ! -f /usr/local/lib_bash/install_or_update.sh ]]; then
@@ -49,6 +51,7 @@ function clean_caches() {
   sudo find "${project_root_dir}" -name "build" -type d -exec rm -rf {} \; 2>/dev/null
   sudo find "${project_root_dir}" -name "dist" -type d -exec rm -rf {} \; 2>/dev/null
   sudo find "${project_root_dir}" -name "*.egg-info" -type d -exec rm -rf {} \; 2>/dev/null
+  sudo rm -rf "$HOME/.eggs/*"
 }
 
 function install_virtualenv_debian() {
@@ -154,7 +157,9 @@ function setup_install_venv() {
   fi
 }
 
+
 function test_commandline_interface_venv() {
+  # this will fail if rotek lib directory is in the path - keep this as a reminder
   my_banner "test commandline interface on virtual environment"
   install_clean_virtual_environment
   cd "${project_root_dir}" || exit
