@@ -188,8 +188,6 @@ following modules will be automatically installed :
 
     ## Project Requirements
     docopt
-    pathlib
-    typing
     lib_csv @ git+https://github.com/bitranox/lib_csv.git
     lib_list @ git+https://github.com/bitranox/lib_list.git
     lib_regexp @ git+https://github.com/bitranox/lib_regexp.git
