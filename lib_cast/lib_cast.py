@@ -732,7 +732,7 @@ def cast_str_2_list(s_input: str, keep_empty_list_items: bool = True) -> List[An
     ['a', 'x,y', 'b']
 
     """
-    items = lib_csv.cast_csv_2_list(s_csvstr=s_input)
+    items = lib_csv.cast_csv_2_list(csv_str=s_input)
     items = lib_list.ls_strip_elements(items)
     if not keep_empty_list_items:
         items = lib_list.ls_del_empty_elements(items)
