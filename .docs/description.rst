@@ -9,6 +9,14 @@ it can also be used on the commandline for windows and linux bash
     >>> # cast floating point values
     >>> cast_float_to_human_readable_size(1000,'Volt')
     '1.00 KiloVolt (x10^3)'
+    >>> cast_float_to_human_readable_size(0.1,'Volt')
+    '100.00 MilliVolt (x10^-3)'
+    >>> cast_float_to_human_readable_size(0.1,'V', short_form=True)
+    '100.00 mV (x10^-3)'
+    >>> cast_float_to_human_readable_size(0.1,'V', short_form=True, show_exponent=False)
+    '100.00 mV'
+    >>> cast_float_to_human_readable_size(0.1,'V', short_form=True, show_exponent=False, remove_trailing_zeros=True)
+    '100 mV'
 
     >>> # cast byte or bit sizes
     >>> cast_float_to_human_readable_size(65535,base1024=True)
