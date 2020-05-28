@@ -63,7 +63,8 @@ def get_path_template_dir_local() -> pathlib.Path:
 def is_ok_to_copy(path_source_file: pathlib.Path) -> bool:
     """ its ok when a file and not in the list """
     files_not_to_copy = ['requirements.txt', 'project_conf.py', '.travis.yml', 'README.rst',
-                         'CHANGES.rst', 'badges_project.rst', 'description.rst', 'usage.rst', 'installation.rst']
+                         'CHANGES.rst', 'description.rst', 'usage.rst', 'installation.rst', 'acknowledgment.rst',
+                         'badges_project.rst', 'badges_with_jupyter.rst', 'badges_without_jupyter.rst']
     if path_source_file.is_file():
         if path_source_file.name in files_not_to_copy:
             return False
@@ -115,23 +116,31 @@ def copy_template_files() -> None:
         path_sourcefile = path_source_dir / 'templates/CHANGES.rst'
         shutil.copy(str(path_sourcefile), str(path_targetfile))
 
-    # copy badges template
+    # copy usage.rst template if not there
+    path_targetfile = path_target_dir / '.docs/usage.rst'
+    if not path_targetfile.is_file():
+        path_sourcefile = path_source_dir / 'templates/usage.rst'
+        shutil.copy(str(path_sourcefile), str(path_targetfile))
+
+    # copy description.rst template if not there
+    path_targetfile = path_target_dir / '.docs/description.rst'
+    if not path_targetfile.is_file():
+        path_sourcefile = path_source_dir / 'templates/description.rst'
+        shutil.copy(str(path_sourcefile), str(path_targetfile))
+
+    # copy acknowledgment.rst template if not there
+    path_targetfile = path_target_dir / '.docs/acknowledgment.rst'
+    if not path_targetfile.is_file():
+        path_sourcefile = path_source_dir / 'templates/acknowledgment.rst'
+        shutil.copy(str(path_sourcefile), str(path_targetfile))
+
+    # overwrite badges template
     if project_conf.badges_with_jupiter:
         path_sourcefile = path_source_dir / '.docs/badges_with_jupyter.rst'
     else:
         path_sourcefile = path_source_dir / '.docs/badges_without_jupyter.rst'
     path_targetfile = path_target_dir / '.docs/badges_project.rst'
     shutil.copy(str(path_sourcefile), str(path_targetfile))
-    # copy usage.rst template if not there
-    path_targetfile = path_target_dir / '.docs/usage.rst'
-    if not path_targetfile.is_file():
-        path_sourcefile = path_source_dir / 'templates/usage.rst'
-        shutil.copy(str(path_sourcefile), str(path_targetfile))
-    # copy description.rst template if not there
-    path_targetfile = path_target_dir / '.docs/description.rst'
-    if not path_targetfile.is_file():
-        path_sourcefile = path_source_dir / 'templates/description.rst'
-        shutil.copy(str(path_sourcefile), str(path_targetfile))
     # overwrite installation.rst template
     path_targetfile = path_target_dir / '.docs/installation.rst'
     path_sourcefile = path_source_dir / 'templates/installation.rst'
