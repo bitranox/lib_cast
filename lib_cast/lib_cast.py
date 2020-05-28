@@ -880,31 +880,27 @@ def cast_datetime_2_str(d_datetime: datetime.datetime, b_format_for_filename: bo
     return s_datetime
 
 
-def cast_microtime_to_text(microtime: Union[int, float, str],
-                           timezone: str = "UTC",
-                           microtime_is_float: bool = True,
-                           date_time_format: str = '%Y-%m-%d %H:%M:%S') -> str:
+def cast_timestamp_seconds_since_epoch_to_text(seconds: Union[int, float, str],
+                                               timezone: str = "UTC",
+                                               time_in_nanoseconds: bool = False,
+                                               date_time_format: str = '%Y-%m-%d %H:%M:%S') -> str:
     """
-    converts microtime to text date and time.
-
-    if microtime_is_float=False it takes the unix (integer) microtimestamp
-    the Timezone can be UTC otherwise it is LOCAL
-    the fractions of a second are rounded
-    >>> cast_microtime_to_text(0,"UTC")
-    '1970-01-01 00:00:00'
-    >>> assert cast_microtime_to_text("0","LOCAL")
-
+    >>> assert cast_timestamp_seconds_since_epoch_to_text(0,"UTC") == '1970-01-01 00:00:00'
+    >>> assert cast_timestamp_seconds_since_epoch_to_text("0","LOCAL")
+    >>> assert cast_timestamp_seconds_since_epoch_to_text(1590674483 ,"UTC") == '2020-05-28 14:01:23'
+    >>> assert cast_timestamp_seconds_since_epoch_to_text(1590674574765797619 ,"UTC", time_in_nanoseconds=True) == '2020-05-28 14:02:55'
     """
-    microtime = float(microtime)
+    seconds = float(seconds)
 
-    if not microtime_is_float:
-        microtime = float(microtime) / 1E6
-    microtime = int(round(microtime))
+    if time_in_nanoseconds:
+        seconds = seconds / 1E9
+
+    seconds = int(round(seconds))
 
     if timezone == "UTC":
-        epochseconds = time.gmtime(microtime)
+        epochseconds = time.gmtime(seconds)
     else:
-        epochseconds = time.localtime(microtime)
+        epochseconds = time.localtime(seconds)
 
     return time.strftime(date_time_format, epochseconds)
 
