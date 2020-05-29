@@ -27,10 +27,12 @@ import lib_regexp   # type: ignore
 
 # PROJ
 try:
+    from .__doc__ import __doc__
     from . import __init__conf__
 except ImportError:                 # pragma: no cover
     # imports for doctest
     import __init__conf__           # type: ignore  # pragma: no cover
+    from __doc__ import __doc__     # type: ignore  # pragma: no cover
 
 
 def cast_float_2_string(value: Union[Decimal, float],
