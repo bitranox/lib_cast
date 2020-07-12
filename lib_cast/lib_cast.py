@@ -821,7 +821,7 @@ def is_castable_to_float(value: Union[SupportsFloat, str, bytes, bytearray]) -> 
     True
     >>> is_castable_to_float('')
     False
-    >>> is_castable_to_float(None)
+    >>> is_castable_to_float(None)  # noqa
     False
 
     """
