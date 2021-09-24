@@ -42,10 +42,10 @@ def create_commandline_help_file() -> None:
     """
     import subprocess
     import sys
-    module_path = pathlib.Path('./{src_dir}/{module_name}.py'.format(src_dir=project_conf.src_dir, module_name=project_conf.module_name))
+    module_path = pathlib.Path(f'./{project_conf.src_dir}/{project_conf.module_name}.py')
     if module_path.is_file():
         module_path = module_path.resolve()
-        command = '{sys_executable} {module_path} -h > ./.docs/commandline_help.txt'.format(sys_executable=sys.executable, module_path=module_path)
+        command = f'{sys.executable} {module_path} -h > ./.docs/commandline_help.txt'
         subprocess.run(command, shell=True)
     format_commandline_help_file()
 
@@ -267,7 +267,7 @@ def main(docopt_args: Dict[str, Union[bool, str]]) -> None:
         create_commandline_help_file()
         import build_docs
         build_docs_args = dict()
-        build_docs_args['<TRAVIS_REPO_SLUG>'] = '{}/{}'.format(project_conf.github_account, project_conf.package_name)
+        build_docs_args['<TRAVIS_REPO_SLUG>'] = f'{project_conf.github_account}/{project_conf.package_name}'
         build_docs.main(build_docs_args)
 
 
