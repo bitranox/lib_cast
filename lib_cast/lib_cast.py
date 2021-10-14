@@ -21,9 +21,9 @@ from typing import Any, Dict, List, SupportsFloat, SupportsInt, Union
 
 
 # OWN
-import lib_csv      # type: ignore
-import lib_list     # type: ignore
-import lib_regexp   # type: ignore
+import lib_csv
+import lib_list
+import lib_regexp
 
 # PROJ
 try:
@@ -744,7 +744,7 @@ def cast_str_2_list(s_input: str, keep_empty_list_items: bool = True) -> List[An
     items = lib_list.ls_strip_elements(items)
     if not keep_empty_list_items:
         items = lib_list.ls_del_empty_elements(items)
-    return items  # type: ignore
+    return items
 
 
 def cast_list_of_strings_to_lower(list_of_strings: List[str]) -> List[str]:
