@@ -866,11 +866,11 @@ def cast_datetime_2_str(d_datetime: datetime.datetime, b_format_for_filename: bo
 
     >>> # gibt z.Bsp.: '2017-11-08_13-10-57'
     >>> dt = datetime.datetime.now()
-    >>> cast_datetime_2_str(dt,True)  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    >>> cast_datetime_2_str(dt,True)
     '...-...-..._...-...-...'
 
     >>> # gibt z.Bsp.: '2017-11-08 13:10:57'
-    >>> cast_datetime_2_str(dt)  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    >>> cast_datetime_2_str(dt)
     '...-...-...:...:...'
 
     """
