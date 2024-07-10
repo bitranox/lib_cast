@@ -3,3 +3,4 @@ docopt
 lib_csv @ git+https://github.com/bitranox/lib_csv.git
 lib_list @ git+https://github.com/bitranox/lib_list.git
 lib_regexp @ git+https://github.com/bitranox/lib_regexp.git
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
