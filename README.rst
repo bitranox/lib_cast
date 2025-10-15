@@ -227,7 +227,7 @@ following modules will be automatically installed :
     ## Project Requirements
     docopt
     lib_csv @ git+https://github.com/bitranox/lib_csv.git
-    lib_list @ git+https://github.com/bitranox/lib_list.git
+    btx_lib_list
     lib_regexp @ git+https://github.com/bitranox/lib_regexp.git
 
 Acknowledgements
