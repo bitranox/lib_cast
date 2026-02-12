@@ -12,7 +12,6 @@ cc_test_reporter_id = '0f951d4827f32d0835249263a1d4aaab93528cd3987ee0c54db11ee53
 # pypi_password
 # to create the secret :
 # cd /<repository>
-# travis encrypt -r bitranox/lib_parameter pypi_password=*****
 # copy and paste the encrypted password here
 # replace with:
 # travis_pypi_secure_code = '<code>'     # pypi secure password, without '"'
